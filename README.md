@@ -3,7 +3,7 @@
 
 该库主要用于 **json** 字符串的反序列化，以及将 **json** 对象进行序列化。通过修改 **hash** 表，及数组最小尺寸大小，可以适用于嵌入式设备进行 **json** 处理。例如：  
 #define HASH_MAX		32  
-ARRAY_MIN_SIZE	32  
+#define ARRAY_MIN_SIZE	32  
 
 **主要功能函数介绍：**  
 **1.JSONCreate**：创建一个 **json** 对象，函数的返回值是一个 **json** 对象指针；  
