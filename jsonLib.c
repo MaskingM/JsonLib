@@ -146,13 +146,6 @@ void JSONDestroyNullNode(pJsonNullNode pNode /* in */);
 void JSONDestroyBooleanNode(pJsonBooleanNode pNode /* in */);
 
 /*
-* json 数组深拷贝
-* @param	pArray json数组
-* @return	pJsonArrayNode	新创建的json Array
-*/
-pJsonArrayNode JSONArrayDeepClone(pJsonArrayNode pArray /* in */);
-
-/*
 * json 数字对象深拷贝
 * @param	pNumber jsonNumber
 * @param	isCopyKey char* 是否进行键名称拷贝

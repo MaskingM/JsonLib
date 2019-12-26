@@ -143,6 +143,13 @@ void JSONRemoveAttr(pJsonObjectNode pObject /* in */, char* key /* in */);
 pJsonObjectNode JSONObjectDeepClone(pJsonObjectNode pObject /* in */);
 
 /*
+* json 数组深拷贝
+* @param	pArray json数组
+* @return	pJsonArrayNode	新创建的json Array
+*/
+pJsonArrayNode JSONArrayDeepClone(pJsonArrayNode pArray /* in */);
+
+/*
 * 向 json 数组节点中数组尾部追加数字
 * @param	pArrayNode pJsonArrayNode 数组节点
 * @param	number double	需要添加的数字
