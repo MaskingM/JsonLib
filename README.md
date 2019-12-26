@@ -1,7 +1,15 @@
 # JsonLib
 纯C语言编写的json库，可以进行json序列化和反序列化  
 
-该库主要用于 **json** 字符串的反序列化，以及将 **json** 对象进行序列化。通过修改 **hash** 表，及数组最小尺寸大小，可以适用于嵌入式设备进行 **json** 处理。例如：  
+该库主要用于 **json** 字符串的反序列化，以及将 **json** 对象进行序列化。  
+**json** 包含的数据类型可以分为： 
+**Object**  
+**Array**  
+**Number**  
+**String**  
+**null**  
+**Boolean**  
+通过修改 **hash** 表，及数组最小尺寸大小，可以适用于嵌入式设备进行 **json** 处理。例如：  
 #define HASH_MAX		32  
 #define ARRAY_MIN_SIZE	32  
 
