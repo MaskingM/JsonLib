@@ -371,12 +371,22 @@ BOOLEAN strIsNumber(char* input /* in */, int len /* in */) {
 		if (len <= 0 || !input) {
 			break;
 		}
+		if (input[0] == '-' && len == 1) {
+			break;
+		}
 		char* buf = malloc(len + 1);
 		if (!buf) {
 			break;
 		}
 		memset(buf, 0, len + 1);
-		memcpy(buf, input, len);
+		if (input[0] == '-') {
+			len -= 1;
+			memcpy(buf, input+1, len);
+		}
+		else {
+			memcpy(buf, input, len);
+		}
+		
 		char ch = 0;
 		BOOLEAN badChar = BFALSE; // 不合法字符
 		// 则此时为纯数字
@@ -729,7 +739,7 @@ BOOLEAN strIsArray(char* input /* in */, int len /* in */) {
 				}
 				badChar = !strIsNull(buf + i, idx + 1 - i);
 			}
-			else if ('0' <= buf[i] && buf[i] <= '9') {
+			else if (('0' <= buf[i] && buf[i] <= '9') || buf[i] == '-') {
 				// 接下来是数字
 				idx = i + 1;
 				while (idx <= len - 2) {
@@ -927,7 +937,7 @@ BOOLEAN strIsObject(char* input /* in */, int len /* in */) {
 							}
 							badChar = !JSONStringBooleanIsFormat(buf + i, idx - i + 1, BTRUE);
 						}
-						else if (buf[curIdx] >= '0' && buf[curIdx] <= '9') {
+						else if ((buf[curIdx] >= '0' && buf[curIdx] <= '9') || buf[curIdx] == '-') {
 							// 值为 Number
 							while (idx <= len - 2) {
 								if (buf[idx] == ',') {
@@ -1894,7 +1904,7 @@ pJsonArrayNode JSONParseArray(char* input /* in */) {
 					idx = i + 4;
 				}
 			}
-			else if (input[i] >= '0' && input[i] <= '9') {
+			else if ((input[i] >= '0' && input[i] <= '9') || input[i] == '-') {
 				double num = 0;
 				idx = i + 1;
 				while (idx <= len - 2) {
@@ -2060,7 +2070,7 @@ pJsonObjectNode JSONParseObject(char* input /* in */) {
 						valIdx = idx + 4;
 					}
 				}
-				else if (input[idx] >= '0' && input[idx] <= '9') {
+				else if ((input[idx] >= '0' && input[idx] <= '9') || input[idx] == '-') {
 					// 值是 number
 					valIdx = idx + 1;
 					while (valIdx <= len - 2) {
