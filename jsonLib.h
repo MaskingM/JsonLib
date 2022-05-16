@@ -1,11 +1,11 @@
-/*
- * json Êı¾İÀàĞÍ¿ÉÒÔ·ÖÎª 4 ÖÖ»ù±¾ÀàĞÍ£º
- * Number Array String Object
- * json ×ÔÉí¿ÉÒÔ¿´×÷Ò»¸ö Object
- * ¼üÖµ¶Ô²ÉÓÃhashMapµÄ·½Ê½½øĞĞ´æ·Å
- * Í¨¹ı Êı×éÁ´±í ·½Ê½½â¾ö hash ³åÍ»
- * Ìí¼ÓÊôĞÔÊ±£¬Èç¹ûÊôĞÔÖµÒÑ¾­´æÔÚ£¬ÔòÌæ»»
-*/
+/**
+ * json æ•°æ®ç±»å‹å¯ä»¥åˆ†ä¸º 5 ç§åŸºæœ¬ç±»å‹ï¼š
+ * LongNumber Number Array String Object
+ * json è‡ªèº«å¯ä»¥çœ‹ä½œä¸€ä¸ª Object
+ * é”®å€¼å¯¹é‡‡ç”¨hashMapçš„æ–¹å¼è¿›è¡Œå­˜æ”¾
+ * é€šè¿‡ æ•°ç»„é“¾è¡¨ æ–¹å¼è§£å†³ hash å†²çª
+ * æ·»åŠ å±æ€§æ—¶ï¼Œå¦‚æœå±æ€§å€¼å·²ç»å­˜åœ¨ï¼Œåˆ™æ›¿æ¢
+ */
 #define _CRT_SECURE_NO_WARNINGS
 #ifndef __JSON_LIB__H_
 #define __JSON_LIB__H_
@@ -15,351 +15,393 @@
 #include "md5.h"
 #include "jsonDataStruct.h"
 
-/*
-* ´´½¨ Object ¿Õ¶ÔÏó
-* @return	pJsonObjectNode
-*/
-pJsonObjectNode JSONCreate();
+/**
+ * åˆ›å»º Object ç©ºå¯¹è±¡
+ * @return	pJsonObjectNode
+ */
+pJsonObjectNode JSONCreate(void);
 
 /*
-* ´´½¨ Array ¿ÕÊı×é
+* åˆ›å»º Array ç©ºæ•°ç»„
 * @return	pJsonArrayNode
 */
-pJsonArrayNode JSONCreateArray();
+pJsonArrayNode JSONCreateArray(void);
 
 /*
- * json ¸ñÊ½»¯º¯Êı£¬½« json ×Ö·û´®×ª»»³É json ¶ÔÏó
- * @param	input		json ×Ö·û´®
+ * json æ ¼å¼åŒ–å‡½æ•°ï¼Œå°† json å­—ç¬¦ä¸²è½¬æ¢æˆ json å¯¹è±¡
+ * @param	input		json å­—ç¬¦ä¸²
  * @return	pJsonObjectNode
 */
 pJsonObjectNode JSONParse(char* input);
 
 /*
-* json ĞòÁĞ»¯£¬½« json ¶ÔÏó×ª»»³É json ×Ö·û´®
-* @param	pNode pJsonNode			json ½Úµã
-* @param	output	char**			½ÓÊÕ×Ö·û´®µÄÖ¸Õë
+* json åºåˆ—åŒ–ï¼Œå°† json å¯¹è±¡è½¬æ¢æˆ json å­—ç¬¦ä¸²
+* @param	pNode pJsonNode			json èŠ‚ç‚¹
+* @param	output	char**			æ¥æ”¶å­—ç¬¦ä¸²çš„æŒ‡é’ˆ
 * @return	void
 */
 void JSONStringify(pJsonNode pNode /* in */, char** output /* out */);
 
 /*
-* ´òÓ¡ json ½Úµã
-* @param	pNode pJsonNode		json ½Úµã
+* æ‰“å° json èŠ‚ç‚¹
+* @param	pNode pJsonNode		json èŠ‚ç‚¹
 * @return	void
 */
 void JSONPrint(pJsonNode pNode /* in */);
 
 /*
-* Ïú»Ù json ½Úµã
-* @param	pObject		json ½Úµã
+* é”€æ¯ json èŠ‚ç‚¹
+* @param	pObject		json èŠ‚ç‚¹
 * @return	void
 */
 void JSONDestroy(pJsonNode pNode /* in */);
 
 /*
- * ÅĞ¶Ï json ÊÇ·ñ°üº¬ÊôĞÔ
- * @param	pObject		json ¶ÔÏó
- * @param	key			ÊôĞÔÃû³Æ
- * @return	BOOLEAN		ÊÇ·ñ°üº¬ÊôĞÔ
+ * åˆ¤æ–­ json æ˜¯å¦åŒ…å«å±æ€§
+ * @param	pObject		json å¯¹è±¡
+ * @param	key			å±æ€§åç§°
+ * @return	BOOLEAN		æ˜¯å¦åŒ…å«å±æ€§
 */
 BOOLEAN JSONIsContainsAttr(pJsonObjectNode pObject /* in */, char* key /* in */);
 
 /*
- * Ïò json ¶ÔÏóÖĞÌí¼Ó NumberÀàĞÍ ¼üÖµ¶ÔÏó
- * @param	pObject		json ¶ÔÏó
- * @param	key			ÊôĞÔÃû³Æ
- * @param	value		ÊôĞÔÖµ
+ * å‘ json å¯¹è±¡ä¸­æ·»åŠ  Numberç±»å‹ é”®å€¼å¯¹è±¡
+ * @param	pObject		json å¯¹è±¡
+ * @param	key			å±æ€§åç§°
+ * @param	value		å±æ€§å€¼
  * @return	void
 */
 void JSONSetNumberAttr(pJsonObjectNode pObject /* in */, char* key /* in */, double value /* in */);
 
 /*
- * Ïò json ¶ÔÏóÖĞÌí¼Ó StringÀàĞÍ ¼üÖµ¶ÔÏó
- * @param	pObject		json ¶ÔÏó
- * @param	key			ÊôĞÔÃû³Æ
- * @param	value		ÊôĞÔÖµ
+ * å‘ json å¯¹è±¡ä¸­æ·»åŠ  Long Numberç±»å‹ é”®å€¼å¯¹è±¡
+ * @param	pObject		json å¯¹è±¡
+ * @param	key			å±æ€§åç§°
+ * @param	value		å±æ€§å€¼
+ * @return	void
+*/
+void JSONSetLongNumberAttr(pJsonObjectNode pObject /* in */, char* key /* in */, UINT64 value /* in */);
+
+/*
+ * å‘ json å¯¹è±¡ä¸­æ·»åŠ  Stringç±»å‹ é”®å€¼å¯¹è±¡
+ * @param	pObject		json å¯¹è±¡
+ * @param	key			å±æ€§åç§°
+ * @param	value		å±æ€§å€¼
  * @return	void
 */
 void JSONSetStringAttr(pJsonObjectNode pObject /* in */, char* key /* in */, char* value /* in */);
 
 /*
- * Ïò json ¶ÔÏóÖĞÌí¼Ó ArrayÀàĞÍ ¼üÖµ¶ÔÏó£¬Ìí¼ÓµÄÊı×éÎª¿ÕÊı×é
- * @param	pObject		json ¶ÔÏó
- * @param	key			ÊôĞÔÃû³Æ
+ * å‘ json å¯¹è±¡ä¸­æ·»åŠ  Arrayç±»å‹ é”®å€¼å¯¹è±¡ï¼Œæ·»åŠ çš„æ•°ç»„ä¸ºç©ºæ•°ç»„
+ * @param	pObject		json å¯¹è±¡
+ * @param	key			å±æ€§åç§°
  * @return	void
 */
 void JSONSetEmptyArrayAttr(pJsonObjectNode pObject /* in */, char* key /* in */);
 
 /*
-* Ïò json ¶ÔÏóÖĞÌí¼Ó ArrayÀàĞÍ ¼üÖµ¶ÔÏó
-* @param	pObject		json ¶ÔÏó
-* @param	key			ÊôĞÔÃû³Æ
-* @param	value		pJsonArrayNode	Êı×é½Úµã
-* @param	isDeepClone	BOOLEAN ÊÇ·ñ½øĞĞÉî¶È¿½±´
+* å‘ json å¯¹è±¡ä¸­æ·»åŠ  Arrayç±»å‹ é”®å€¼å¯¹è±¡
+* @param	pObject		json å¯¹è±¡
+* @param	key			å±æ€§åç§°
+* @param	value		pJsonArrayNode	æ•°ç»„èŠ‚ç‚¹
+* @param	isDeepClone	BOOLEAN æ˜¯å¦è¿›è¡Œæ·±åº¦æ‹·è´
  * @return	void
 */
 void JSONSetArrayAttr(pJsonObjectNode pObject /* in */, char* key /* in */, pJsonArrayNode pArray, BOOLEAN isDeepClone);
 
 /*
- * Ïò json ¶ÔÏóÖĞÌí¼Ó ObjectÀàĞÍ ¼üÖµ¶ÔÏó
- * @param	pObject		json ¶ÔÏó
- * @param	key			ÊôĞÔÃû³Æ
- * @param	value		ÊôĞÔÖµ
-* @param	isDeepClone	BOOLEAN ÊÇ·ñ½øĞĞÉî¶È¿½±´
+ * å‘ json å¯¹è±¡ä¸­æ·»åŠ  Objectç±»å‹ é”®å€¼å¯¹è±¡
+ * @param	pObject		json å¯¹è±¡
+ * @param	key			å±æ€§åç§°
+ * @param	value		å±æ€§å€¼
+* @param	isDeepClone	BOOLEAN æ˜¯å¦è¿›è¡Œæ·±åº¦æ‹·è´
  * @return	void
 */
 void JSONSetObjectAttr(pJsonObjectNode pObject /* in */, char* key /* in */, pJsonObjectNode value /* in */, BOOLEAN isDeepClone);
 
 /*
-* Ïò json ¶ÔÏóÖĞÌí¼Ó nullÀàĞÍ ¼üÖµ¶ÔÏó
-* @param	pObject		json ¶ÔÏó
-* @param	key			ÊôĞÔÃû³Æ
+* å‘ json å¯¹è±¡ä¸­æ·»åŠ  nullç±»å‹ é”®å€¼å¯¹è±¡
+* @param	pObject		json å¯¹è±¡
+* @param	key			å±æ€§åç§°
 * @return	void
 */
 void JSONSetNullAttr(pJsonObjectNode pObject /* in */, char* key /* in */);
 
 /*
-* Ïò json ¶ÔÏóÖĞÌí¼Ó BooleanÀàĞÍ ¼üÖµ¶ÔÏó
-* @param	pObject				json ¶ÔÏó
-* @param	key char*			ÊôĞÔÃû³Æ
-* @param	value Boolean		ÊôĞÔÖµ
+* å‘ json å¯¹è±¡ä¸­æ·»åŠ  Booleanç±»å‹ é”®å€¼å¯¹è±¡
+* @param	pObject				json å¯¹è±¡
+* @param	key char*			å±æ€§åç§°
+* @param	value Boolean		å±æ€§å€¼
 * @return	void
 */
 void JSONSetBooleanAttr(pJsonObjectNode pObject /* in */, char* key /* in */, BOOLEAN value /* in */);
 
 /*
- * ÒÆ³ı json ¶ÔÏóÖĞµÄÊôĞÔ
- * @param	pObject		json ¶ÔÏó
- * @param	key			ÊôĞÔÃû³Æ
+ * ç§»é™¤ json å¯¹è±¡ä¸­çš„å±æ€§
+ * @param	pObject		json å¯¹è±¡
+ * @param	key			å±æ€§åç§°
  * @return	void
 */
 void JSONRemoveAttr(pJsonObjectNode pObject /* in */, char* key /* in */);
 
 /*
-* json ¶ÔÏóÉî¿½±´
-* @param	pObject json¶ÔÏó
-* @return	pJsonObjectNode	ĞÂ´´½¨µÄjson¶ÔÏó
+* json å¯¹è±¡æ·±æ‹·è´
+* @param	pObject jsonå¯¹è±¡
+* @return	pJsonObjectNode	æ–°åˆ›å»ºçš„jsonå¯¹è±¡
 */
 pJsonObjectNode JSONObjectDeepClone(pJsonObjectNode pObject /* in */);
 
 /*
-* json Êı×éÉî¿½±´
-* @param	pArray jsonÊı×é
-* @return	pJsonArrayNode	ĞÂ´´½¨µÄjson Array
+* json æ•°ç»„æ·±æ‹·è´
+* @param	pArray jsonæ•°ç»„
+* @return	pJsonArrayNode	æ–°åˆ›å»ºçš„json Array
 */
 pJsonArrayNode JSONArrayDeepClone(pJsonArrayNode pArray /* in */);
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÎ²²¿×·¼ÓÊı×Ö
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	number double	ĞèÒªÌí¼ÓµÄÊı×Ö
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å°¾éƒ¨è¿½åŠ æ•°å­—
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	number double	éœ€è¦æ·»åŠ çš„æ•°å­—
 * @return	void
 */
 void JSONArrayPushNumber(pJsonArrayNode pArrayNode /* in */, double number /* in */);
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÎ²²¿×·¼Ó×Ö·û´®
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	pString char*	ĞèÒªÌí¼ÓµÄ×Ö·û´®
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å°¾éƒ¨è¿½åŠ é•¿æ•°å­—
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	number UINT64	éœ€è¦æ·»åŠ çš„æ•°å­—
+* @return	void
+*/
+void JSONArrayPushLongNumber(pJsonArrayNode pArrayNode /* in */, UINT64 number /* in */);
+
+/*
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å°¾éƒ¨è¿½åŠ å­—ç¬¦ä¸²
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	pString char*	éœ€è¦æ·»åŠ çš„å­—ç¬¦ä¸²
 * @return	void
 */
 void JSONArrayPushString(pJsonArrayNode pArrayNode /* in */, char* pString /* in */);
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÎ²²¿×·¼ÓÊı×é
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	pArr pJsonArrayNode	ĞèÒªÌí¼ÓµÄÊı×é½Úµã
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å°¾éƒ¨è¿½åŠ æ•°ç»„
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	pArr pJsonArrayNode	éœ€è¦æ·»åŠ çš„æ•°ç»„èŠ‚ç‚¹
 * @return	void
 */
 void JSONArrayPushArray(pJsonArrayNode pArrayNode /* in */, pJsonArrayNode pArr /* in */);
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÎ²²¿×·¼Ó¶ÔÏó
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	pObject pJsonObjectNode	ĞèÒªÌí¼ÓµÄ¶ÔÏó½Úµã
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å°¾éƒ¨è¿½åŠ å¯¹è±¡
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	pObject pJsonObjectNode	éœ€è¦æ·»åŠ çš„å¯¹è±¡èŠ‚ç‚¹
 * @return	void
 */
 void JSONArrayPushObject(pJsonArrayNode pArrayNode /* in */, pJsonObjectNode pObject /* in */);
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÎ²²¿×·¼Ó null
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å°¾éƒ¨è¿½åŠ  null
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
 * @return	void
 */
 void JSONArrayPushNull(pJsonArrayNode pArrayNode /* in */);
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÎ²²¿×·¼Ó Boolean
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	value BOOLEAN	ĞèÒªÌí¼ÓµÄ Boolean
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å°¾éƒ¨è¿½åŠ  Boolean
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	value BOOLEAN	éœ€è¦æ·»åŠ çš„ Boolean
 * @return	void
 */
 void JSONArrayPushBoolean(pJsonArrayNode pArrayNode /* in */, BOOLEAN value /* in */);
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÍ·²¿×·¼ÓÊı×Ö
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	number double	ĞèÒªÌí¼ÓµÄÊı×Ö
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å¤´éƒ¨è¿½åŠ æ•°å­—
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	number double	éœ€è¦æ·»åŠ çš„æ•°å­—
 * @return	void
 */
 void JSONArrayUnshiftNumber(pJsonArrayNode pArrayNode /* in */, double number /* in */);
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÍ·²¿×·¼Ó×Ö·û´®
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	pString char*	ĞèÒªÌí¼ÓµÄ×Ö·û´®
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å¤´éƒ¨è¿½åŠ é•¿æ•°å­—
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	number UINT64	éœ€è¦æ·»åŠ çš„æ•°å­—
+* @return	void
+*/
+void JSONArrayUnshiftLongNumber(pJsonArrayNode pArrayNode /* in */, UINT64 number /* in */);
+
+/*
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å¤´éƒ¨è¿½åŠ å­—ç¬¦ä¸²
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	pString char*	éœ€è¦æ·»åŠ çš„å­—ç¬¦ä¸²
 * @return	void
 */
 void JSONArrayUnshiftString(pJsonArrayNode pArrayNode /* in */, char* pString /* in */);
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÍ·²¿×·¼ÓÊı×é
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	pArr pJsonArrayNode	ĞèÒªÌí¼ÓµÄÊı×é
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å¤´éƒ¨è¿½åŠ æ•°ç»„
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	pArr pJsonArrayNode	éœ€è¦æ·»åŠ çš„æ•°ç»„
 * @return	void
 */
 void JSONArrayUnshiftArray(pJsonArrayNode pArrayNode /* in */, pJsonArrayNode pArr /* in */);
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÍ·²¿×·¼Ó¶ÔÏó
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	pObject pJsonObjectNode	ĞèÒªÌí¼ÓµÄ¶ÔÏó
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å¤´éƒ¨è¿½åŠ å¯¹è±¡
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	pObject pJsonObjectNode	éœ€è¦æ·»åŠ çš„å¯¹è±¡
 * @return	void
 */
 void JSONArrayUnshiftObject(pJsonArrayNode pArrayNode /* in */, pJsonObjectNode pObject /* in */);
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÍ·²¿×·¼Ó null
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å¤´éƒ¨è¿½åŠ  null
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
 * @return	void
 */
 void JSONArrayUnshiftNull(pJsonArrayNode pArrayNode /* in */);
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÍ·²¿×·¼Ó Boolean
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	value BOOLEAN	ĞèÒªÌí¼ÓµÄ Boolean
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å¤´éƒ¨è¿½åŠ  Boolean
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	value BOOLEAN	éœ€è¦æ·»åŠ çš„ Boolean
 * @return	void
 */
 void JSONArrayUnshiftBoolean(pJsonArrayNode pArrayNode /* in */, BOOLEAN value /* in */);
 
 /*
-* »ñÈ¡Êı×éÀàĞÍµÄÊı¾İ³¤¶È
-* @param	pArray	pJsonArrayNode Êı×é½Úµã
-* @return	unsigned int	Êı×é³¤¶È
+* è·å–æ•°ç»„ç±»å‹çš„æ•°æ®é•¿åº¦
+* @param	pArray	pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @return	unsigned int	æ•°ç»„é•¿åº¦
 */
 unsigned int JSONArrayGetLength(pJsonArrayNode pArray /* in */);
 
 /*
-* »ñÈ¡Êı×éÖ¸¶¨Î»ÖÃÔªËØ
-* @param	pArray	pJsonArrayNode Êı×é½Úµã
+* è·å–æ•°ç»„æŒ‡å®šä½ç½®å…ƒç´ 
+* @param	pArray	pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
 * @param	pos		int
-* @return	pJsonNode	Êı×éÔªËØ
+* @return	pJsonNode	æ•°ç»„å…ƒç´ 
 */
 pJsonNode JSONArrayGetNode(pJsonArrayNode pArray /* in */, int pos /* in */);
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÎ²²¿É¾³ıÔªËØ£¬²¢Ïú»Ù¸ÃÔªËØ
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å°¾éƒ¨åˆ é™¤å…ƒç´ ï¼Œå¹¶é”€æ¯è¯¥å…ƒç´ 
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
 * @return	void
 */
 void JSONArrayPop(pJsonArrayNode pArrayNode /* in */);
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÍ·²¿É¾³ıÔªËØ£¬²¢Ïú»Ù¸ÃÔªËØ
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å¤´éƒ¨åˆ é™¤å…ƒç´ ï¼Œå¹¶é”€æ¯è¯¥å…ƒç´ 
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
 * @return	void
 */
 void JSONArrayShift(pJsonArrayNode pArrayNode /* in */);
 
 /*
-* »ñÈ¡ Object ÊôĞÔÊı¾İÀàĞÍ
-* @param	pObject	pJsonObjectNode	json ¶ÔÏó
-* @param	key char*		¼üÖµ
-* @return	JSON_DATA_TYPE		json ½ÚµãµÄÊı¾İÀàĞÍ
+* è·å– Object å±æ€§æ•°æ®ç±»å‹
+* @param	pObject	pJsonObjectNode	json å¯¹è±¡
+* @param	key char*		é”®å€¼
+* @return	JSON_DATA_TYPE		json èŠ‚ç‚¹çš„æ•°æ®ç±»å‹
 */
 JSON_DATA_TYPE JSONObjectGetAttrType(pJsonObjectNode pObject /* in */, char* key /* in */);
 
 /*
-* »ñÈ¡ ½Úµã Êı¾İÀàĞÍ
-* @param	pNode	pJsonNode	½Úµã
-* @return	JSON_DATA_TYPE		json ½ÚµãµÄÊı¾İÀàĞÍ
+* è·å– èŠ‚ç‚¹ æ•°æ®ç±»å‹
+* @param	pNode	pJsonNode	èŠ‚ç‚¹
+* @return	JSON_DATA_TYPE		json èŠ‚ç‚¹çš„æ•°æ®ç±»å‹
 */
 JSON_DATA_TYPE JSONNodeGetType(pJsonNode pNode /* in */);
 
 /*
-* »ñÈ¡Êı×Ö½ÚµãµÄÊıÖµ
-* @param	pNode	pJsonNumberNode	Êı×Ö½Úµã
+* è·å–æ•°å­—èŠ‚ç‚¹çš„æ•°å€¼
+* @param	pNode	pJsonNumberNode	æ•°å­—èŠ‚ç‚¹
 * @param	pValue	double*
 * @return	void
 */
 void JSONNodeGetNumberValue(pJsonNumberNode pNode /* in */, double* pValue /* out */);
 
 /*
-* »ñÈ¡×Ö·û´®½ÚµãµÄµÄ×Ö·û´®
-* @param	pNode	pJsonStringNode	×Ö·û´®½Úµã
+* è·å–é•¿æ•°å­—èŠ‚ç‚¹çš„æ•°å€¼
+* @param	pNode	pJsonNumberNode	æ•°å­—èŠ‚ç‚¹
+* @param	pValue	UINT64*
+* @return	void
+*/
+void JSONNodeGetLongNumberValue(pJsonNumberNode pNode /* in */, UINT64* pValue /* out */);
+
+/*
+* è·å–å­—ç¬¦ä¸²èŠ‚ç‚¹çš„çš„å­—ç¬¦ä¸²
+* @param	pNode	pJsonStringNode	å­—ç¬¦ä¸²èŠ‚ç‚¹
 * @param	ppValue	char**
 * @return	void
 */
 void JSONNodeGetStringValue(pJsonStringNode pNode /* in */, char** ppValue /* out */);
 
 /*
-* »ñÈ¡ Boolean ½ÚµãµÄÖµ
-* @param	pNode	pJsonBooleanNode	Boolean½Úµã
+* è·å– Boolean èŠ‚ç‚¹çš„å€¼
+* @param	pNode	pJsonBooleanNode	BooleanèŠ‚ç‚¹
 * @param	pValue	BOOLEAN*
 * @return	void
 */
 void JSONNodeGetBooleanValue(pJsonBooleanNode pNode /* in */, BOOLEAN* pValue /* out */);
 
 /*
-* »ñÈ¡ json Êı×ÖÊôĞÔ½ÚµãµÄÊıÖµ
-* @param	pObject		pJsonObjectNode json ¶ÔÏó
-* @param	key			char*			¼ü
-* @param	pValue		double*			Öµ
+* è·å– json æ•°å­—å±æ€§èŠ‚ç‚¹çš„æ•°å€¼
+* @param	pObject		pJsonObjectNode json å¯¹è±¡
+* @param	key			char*			é”®
+* @param	pValue		double*			å€¼
 * @return	void
 */
 void JSONObjectGetNumberAttr(pJsonObjectNode pObject /* in */, char* key /* in */, double* pValue /* out */);
 
 /*
-* »ñÈ¡ json ×Ö·û´®ÊôĞÔ½ÚµãµÄ×Ö·û´®
-* @param	pObject		pJsonObjectNode json ¶ÔÏó
-* @param	key			char*			¼ü
-* @param	ppValue		char**			Öµ
+* è·å– json é•¿æ•°å­—å±æ€§èŠ‚ç‚¹çš„æ•°å€¼
+* @param	pObject		pJsonObjectNode json å¯¹è±¡
+* @param	key			char*			é”®
+* @param	pValue		UINT64*			å€¼
+* @return	void
+*/
+void JSONObjectGetLongNumberAttr(pJsonObjectNode pObject /* in */, char* key /* in */, UINT64* pValue /* out */);
+
+/*
+* è·å– json å­—ç¬¦ä¸²å±æ€§èŠ‚ç‚¹çš„å­—ç¬¦ä¸²
+* @param	pObject		pJsonObjectNode json å¯¹è±¡
+* @param	key			char*			é”®
+* @param	ppValue		char**			å€¼
 * @return	void
 */
 void JSONObjectGetStringAttr(pJsonObjectNode pObject /* in */, char* key /* in */, char** ppValue /* out */);
 
 /*
-* »ñÈ¡ json Êı×éÊôĞÔ½ÚµãµÄÖµ
-* @param	pObject		pJsonObjectNode json ¶ÔÏó
-* @param	key			char*			¼ü
-* @param	ppValue		pJsonArrayNode*	Öµ
+* è·å– json æ•°ç»„å±æ€§èŠ‚ç‚¹çš„å€¼
+* @param	pObject		pJsonObjectNode json å¯¹è±¡
+* @param	key			char*			é”®
+* @param	ppValue		pJsonArrayNode*	å€¼
 * @return	void
 */
 void JSONObjectGetArrayAttr(pJsonObjectNode pObject /* in */, char* key /* in */, pJsonArrayNode* ppValue /* out */);
 
 /*
-* »ñÈ¡ json ¶ÔÏóÊôĞÔ½ÚµãµÄÖµ
-* @param	pObject		pJsonObjectNode json ¶ÔÏó
-* @param	key			char*				¼ü
-* @param	ppValue		pJsonObjectNode*	Öµ
+* è·å– json å¯¹è±¡å±æ€§èŠ‚ç‚¹çš„å€¼
+* @param	pObject		pJsonObjectNode json å¯¹è±¡
+* @param	key			char*				é”®
+* @param	ppValue		pJsonObjectNode*	å€¼
 * @return	void
 */
 void JSONObjectGetObjectAttr(pJsonObjectNode pObject /* in */, char* key /* in */, pJsonObjectNode* ppValue /* out */);
 
 /*
-* »ñÈ¡ json  null ÊôĞÔ½ÚµãµÄÖµ
-* @param	pObject		pJsonObjectNode json ¶ÔÏó
-* @param	key			char*				¼ü
+* è·å– json  null å±æ€§èŠ‚ç‚¹çš„å€¼
+* @param	pObject		pJsonObjectNode json å¯¹è±¡
+* @param	key			char*				é”®
 * @param	pValue		pJsonNullNode*
 * @return	void
 */
 void JSONObjectGetNullAttr(pJsonObjectNode pObject /* in */, char* key /* in */, pJsonNullNode* ppValue /* out */);
 
 /*
-* »ñÈ¡ json  Boolean ÊôĞÔ½ÚµãµÄÖµ
-* @param	pObject		pJsonObjectNode json ¶ÔÏó
-* @param	key			char*				¼ü
+* è·å– json  Boolean å±æ€§èŠ‚ç‚¹çš„å€¼
+* @param	pObject		pJsonObjectNode json å¯¹è±¡
+* @param	key			char*				é”®
 * @param	pValue		BOOLEAN*
 * @return	void
 */

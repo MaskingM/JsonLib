@@ -1,355 +1,370 @@
 #include "jsonLib.h"
 
-/*¶¨ÒåÒ»Ğ©²»ĞèÒª±©Â¶µÄ¹¦ÄÜ*/
+/*å®šä¹‰ä¸€äº›ä¸éœ€è¦æš´éœ²çš„åŠŸèƒ½*/
 /*
-* ¼ÆËã md5 ¼ÓÃÜºóµÄ×Ö·û´®
-* @param input ĞèÒª¼ÓÃÜµÄ×Ö·û´®
-* @param output ¼ÓÃÜºóµÄ×Ö·û´®£¬ÄÚ´æ´óĞ¡±ØĞëÔÚ33¸ö×Ö½Ú
+* è®¡ç®— md5 åŠ å¯†åçš„å­—ç¬¦ä¸²
+* @param input éœ€è¦åŠ å¯†çš„å­—ç¬¦ä¸²
+* @param output åŠ å¯†åçš„å­—ç¬¦ä¸²ï¼Œå†…å­˜å¤§å°å¿…é¡»åœ¨33ä¸ªå­—èŠ‚
 * @return void
 */
 void encryptionStr(char *input /* in */, char *output /* out */);
 
 /*
-* ¸ù¾İ×Ö·û´®£¬¼ÆËãhashÖµ
-* @param	input ĞèÒª¼ÆËãµÄ×Ö·û´®
-* @return	unsigned long int ¼ÆËã½á¹û
+* æ ¹æ®å­—ç¬¦ä¸²ï¼Œè®¡ç®—hashå€¼
+* @param	input éœ€è¦è®¡ç®—çš„å­—ç¬¦ä¸²
+* @return	unsigned long int è®¡ç®—ç»“æœ
 */
 unsigned long int getHashVal(char *input /* in */);
 
 /*
-* ´´½¨ Number ½Úµã
-* @param	key		char*	¼üÃû³Æ
-* @param	value	double	¼üÖµ
-* @return	pJsonNumberNode Number½ÚµãÖ¸Õë
+* åˆ›å»º Number èŠ‚ç‚¹
+* @param	key		char*	é”®åç§°
+* @param	value	double	é”®å€¼
+* @return	pJsonNumberNode NumberèŠ‚ç‚¹æŒ‡é’ˆ
 */
 pJsonNumberNode JSONCreateNumberNode(char* key /* in */, double value /* in */);
 
 /*
-* ´´½¨ String ½Úµã
-* @param	key		char* ¼üÃû³Æ
-* @param	value	char* ¼üÖµ
-* @return	pJsonStringNode String½ÚµãÖ¸Õë
+* åˆ›å»º String èŠ‚ç‚¹
+* @param	key		char* é”®åç§°
+* @param	value	char* é”®å€¼
+* @return	pJsonStringNode StringèŠ‚ç‚¹æŒ‡é’ˆ
 */
 pJsonStringNode JSONCreateStringNode(char* key /* in */, char* value /* in */);
 
 /*
-* ´´½¨ Array ¿ÕÊı×é¶ÔÏó
-* @param	key		char* ¼üÃû³Æ
-* @return	pJsonArrayNode Array½ÚµãÖ¸Õë
+* åˆ›å»º Array ç©ºæ•°ç»„å¯¹è±¡
+* @param	key		char* é”®åç§°
+* @return	pJsonArrayNode ArrayèŠ‚ç‚¹æŒ‡é’ˆ
 */
 pJsonArrayNode JSONCreateArrayNode(char* key /* in */);
 
 /*
-* ´´½¨ Object ¿Õ¶ÔÏó
-* @param	key		char* ¼üÃû³Æ
+* åˆ›å»º Object ç©ºå¯¹è±¡
+* @param	key		char* é”®åç§°
 * @return	pJsonObjectNode
 */
 pJsonObjectNode JSONCreateObjectNode(char* key /* in */);
 
 /*
-* ´´½¨ null ½Úµã
-* @param	key		char*	¼üÃû³Æ
-* @return	pJsonNullNode null½ÚµãÖ¸Õë
+* åˆ›å»º null èŠ‚ç‚¹
+* @param	key		char*	é”®åç§°
+* @return	pJsonNullNode nullèŠ‚ç‚¹æŒ‡é’ˆ
 */
 pJsonNullNode JSONCreateNullNode(char* key /* in */);
 
 /*
-* ´´½¨ Boolean ½Úµã
-* @param	key		char*	¼üÃû³Æ
-* @param	value	BOOLEAN	¼üÖµ
-* @return	pJsonBooleanNode Boolean½ÚµãÖ¸Õë
+* åˆ›å»º Boolean èŠ‚ç‚¹
+* @param	key		char*	é”®åç§°
+* @param	value	BOOLEAN	é”®å€¼
+* @return	pJsonBooleanNode BooleanèŠ‚ç‚¹æŒ‡é’ˆ
 */
 pJsonBooleanNode JSONCreateBooleanNode(char* key /* in */, BOOLEAN value /* in */);
 
 /*
-* ´òÓ¡ Number
+* æ‰“å° Number
 * @param	pNode pJsonNumberNode
 * @return	void
 */
 void JSONPrintNumberNode(pJsonNumberNode pNode /* in */);
 
 /*
-* ´òÓ¡ String
+* æ‰“å° String
 * @param	pNode pJsonStringNode
 * @return	void
 */
 void JSONPrintStringNode(pJsonStringNode pNode /* in */);
 
 /*
-* ´òÓ¡ Array
+* æ‰“å° Array
 * @param	pNode pJsonArrayNode
 * @return	void
 */
 void JSONPrintArrayNode(pJsonArrayNode pNode /* in */);
 
 /*
-* ´òÓ¡ json ¶ÔÏó
-* @param	pObject		json ¶ÔÏó
+* æ‰“å° json å¯¹è±¡
+* @param	pObject		json å¯¹è±¡
 * @return	void
 */
 void JSONPrintObjectNode(pJsonObjectNode pObject /* in */);
 
 /*
-* ´òÓ¡ null
+* æ‰“å° null
 * @param	pNode pJsonNullNode
 * @return	void
 */
 void JSONPrintNullNode(pJsonNullNode pNode /* in */);
 
 /*
-* ´òÓ¡ Boolean
+* æ‰“å° Boolean
 * @param	pNode pJsonBooleanNode
 * @return	void
 */
 void JSONPrintBooleanNode(pJsonBooleanNode pNode /* in */);
 
 /*
-* Ïú»Ù Number ÀàĞÍÀàĞÍ½Úµã
-* @param	pNode NumberÀàĞÍ½Úµã
+* é”€æ¯ Number ç±»å‹ç±»å‹èŠ‚ç‚¹
+* @param	pNode Numberç±»å‹èŠ‚ç‚¹
 * @return void
 */
 void JSONDestroyNumberNode(pJsonNumberNode pNode /* in */);
 
 /*
-* Ïú»Ù String ÀàĞÍÀàĞÍ½Úµã
-* @param	pNode StringÀàĞÍ½Úµã
+* é”€æ¯ Long Number ç±»å‹ç±»å‹èŠ‚ç‚¹
+* @param	pNode Long Numberç±»å‹èŠ‚ç‚¹
+* @return void
+*/
+void JSONDestroyLongNumberNode(pJsonLongNumberNode pNode /* in */);
+
+/*
+* é”€æ¯ String ç±»å‹ç±»å‹èŠ‚ç‚¹
+* @param	pNode Stringç±»å‹èŠ‚ç‚¹
 * @return void
 */
 void JSONDestroyStringNode(pJsonStringNode pNode /* in */);
 
 /*
-* Ïú»Ù Array ÀàĞÍÀàĞÍ½Úµã
-* @param	pNode ArrayÀàĞÍ½Úµã
+* é”€æ¯ Array ç±»å‹ç±»å‹èŠ‚ç‚¹
+* @param	pNode Arrayç±»å‹èŠ‚ç‚¹
 * @return void
 */
 void JSONDestroyArrayNode(pJsonArrayNode pNode /* in */);
 
 /*
-* Ïú»Ù Object ÀàĞÍÀàĞÍ½Úµã
-* @param	pNode ObjectÀàĞÍ½Úµã
+* é”€æ¯ Object ç±»å‹ç±»å‹èŠ‚ç‚¹
+* @param	pNode Objectç±»å‹èŠ‚ç‚¹
 * @return void
 */
 void JSONDestroyObjectNode(pJsonObjectNode pNode /* in */);
 
 /*
-* Ïú»Ù null ÀàĞÍÀàĞÍ½Úµã
-* @param	pNode nullÀàĞÍ½Úµã
+* é”€æ¯ null ç±»å‹ç±»å‹èŠ‚ç‚¹
+* @param	pNode nullç±»å‹èŠ‚ç‚¹
 * @return void
 */
 void JSONDestroyNullNode(pJsonNullNode pNode /* in */);
 
 /*
-* Ïú»Ù Boolean ÀàĞÍÀàĞÍ½Úµã
-* @param	pNode BooleanÀàĞÍ½Úµã
+* é”€æ¯ Boolean ç±»å‹ç±»å‹èŠ‚ç‚¹
+* @param	pNode Booleanç±»å‹èŠ‚ç‚¹
 * @return void
 */
 void JSONDestroyBooleanNode(pJsonBooleanNode pNode /* in */);
 
 /*
-* json Êı×Ö¶ÔÏóÉî¿½±´
+* json æ•°å­—å¯¹è±¡æ·±æ‹·è´
 * @param	pNumber jsonNumber
-* @param	isCopyKey char* ÊÇ·ñ½øĞĞ¼üÃû³Æ¿½±´
-* @return	pJsonNumberNode	ĞÂ´´½¨µÄjson Number
+* @param	isCopyKey char* æ˜¯å¦è¿›è¡Œé”®åç§°æ‹·è´
+* @return	pJsonNumberNode	æ–°åˆ›å»ºçš„json Number
 */
 pJsonNumberNode JSONNumberDeepClone(pJsonNumberNode pNumber /* in */, BOOLEAN isCopyKey /* in */);
 
 /*
-* json ×Ö·û´®¶ÔÏóÉî¿½±´
+* json å­—ç¬¦ä¸²å¯¹è±¡æ·±æ‹·è´
 * @param	pString jsonString
-* @param	isCopyKey char* ÊÇ·ñ½øĞĞ¼üÃû³Æ¿½±´
-* @return	pJsonNumberNode	ĞÂ´´½¨µÄjson Number
+* @param	isCopyKey char* æ˜¯å¦è¿›è¡Œé”®åç§°æ‹·è´
+* @return	pJsonNumberNode	æ–°åˆ›å»ºçš„json Number
 */
 pJsonStringNode JSONStringDeepClone(pJsonStringNode pString /* in */, BOOLEAN isCopyKey /* in */);
 
 /*
-* json null ¶ÔÏóÉî¿½±´
+* json null å¯¹è±¡æ·±æ‹·è´
 * @param	pNull pJsonNullNode
-* @param	isCopyKey char* ÊÇ·ñ½øĞĞ¼üÃû³Æ¿½±´
-* @return	pJsonNullNode	ĞÂ´´½¨µÄjson null
+* @param	isCopyKey char* æ˜¯å¦è¿›è¡Œé”®åç§°æ‹·è´
+* @return	pJsonNullNode	æ–°åˆ›å»ºçš„json null
 */
 pJsonNullNode JSONNullDeepClone(pJsonNullNode pNull /* in */, BOOLEAN isCopyKey /* in */);
 
 /*
-* json Boolean ¶ÔÏóÉî¿½±´
+* json Boolean å¯¹è±¡æ·±æ‹·è´
 * @param	pNull pJsonBooleanNode
-* @param	isCopyKey char* ÊÇ·ñ½øĞĞ¼üÃû³Æ¿½±´
-* @return	pJsonBooleanNode	ĞÂ´´½¨µÄjson Boolean
+* @param	isCopyKey char* æ˜¯å¦è¿›è¡Œé”®åç§°æ‹·è´
+* @return	pJsonBooleanNode	æ–°åˆ›å»ºçš„json Boolean
 */
 pJsonBooleanNode JSONBooleanDeepClone(pJsonBooleanNode pBoolean /* in */, BOOLEAN isCopyKey /* in */);
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÎ²²¿×·¼ÓÔªËØ
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	pNode pJsonNode	ĞèÒªÌí¼ÓµÄ½Úµã
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å°¾éƒ¨è¿½åŠ å…ƒç´ 
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	pNode pJsonNode	éœ€è¦æ·»åŠ çš„èŠ‚ç‚¹
 * @return	void
 */
 void JSONArrayPush(pJsonArrayNode pArrayNode /* in */, pJsonNode pNode /* in */);
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÍ·²¿×·¼ÓÔªËØ
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	pNode pJsonNode	ĞèÒªÌí¼ÓµÄ½Úµã
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å¤´éƒ¨è¿½åŠ å…ƒç´ 
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	pNode pJsonNode	éœ€è¦æ·»åŠ çš„èŠ‚ç‚¹
 * @return	void
 */
 void JSONArrayUnshift(pJsonArrayNode pArrayNode /* in */, pJsonNode pNode /* in */);
 
 /*
-* Êı×Ö½ÚµãĞòÁĞ»¯£¬×öÊı×éÔªËØ£¬²»ĞèÒª¼üÃû³Æ
-* @param	pNode	pJsonNumberNode Êı×Ö½Úµã
-* @param	isContainsKey	BOOLEAN	ÊÇ·ñ°üº¬¼ü
-* @return	char*	ĞòÁĞ»¯×Ö·û´®
+* æ•°å­—èŠ‚ç‚¹åºåˆ—åŒ–ï¼Œåšæ•°ç»„å…ƒç´ ï¼Œä¸éœ€è¦é”®åç§°
+* @param	pNode	pJsonNumberNode æ•°å­—èŠ‚ç‚¹
+* @param	isContainsKey	BOOLEAN	æ˜¯å¦åŒ…å«é”®
+* @return	char*	åºåˆ—åŒ–å­—ç¬¦ä¸²
 */
 char* JSONStringifyNumberNode(pJsonNumberNode pNode, BOOLEAN isContainsKey);
 
 /*
-* ×Ö·û´®½ÚµãĞòÁĞ»¯£¬×öÊı×éÔªËØ£¬²»ĞèÒª¼üÃû³Æ
-* @param	pNode	pJsonStringNode ×Ö·û´®½Úµã
-* @param	isContainsKey	BOOLEAN	ÊÇ·ñ°üº¬¼ü
-* @return	char*	ĞòÁĞ»¯×Ö·û´®
+* æ•°å­—èŠ‚ç‚¹åºåˆ—åŒ–ï¼Œåšæ•°ç»„å…ƒç´ ï¼Œä¸éœ€è¦é”®åç§°
+* @param	pNode	pJsonLongNumberNode æ•°å­—èŠ‚ç‚¹
+* @param	isContainsKey	BOOLEAN	æ˜¯å¦åŒ…å«é”®
+* @return	char*	åºåˆ—åŒ–å­—ç¬¦ä¸²
+*/
+char* JSONStringifyLongNumberNode(pJsonLongNumberNode pNode, BOOLEAN isContainsKey);
+
+/*
+* å­—ç¬¦ä¸²èŠ‚ç‚¹åºåˆ—åŒ–ï¼Œåšæ•°ç»„å…ƒç´ ï¼Œä¸éœ€è¦é”®åç§°
+* @param	pNode	pJsonStringNode å­—ç¬¦ä¸²èŠ‚ç‚¹
+* @param	isContainsKey	BOOLEAN	æ˜¯å¦åŒ…å«é”®
+* @return	char*	åºåˆ—åŒ–å­—ç¬¦ä¸²
 */
 char* JSONStringifyStringNode(pJsonStringNode pNode, BOOLEAN isContainsKey);
 
 /*
-* Êı×é½ÚµãĞòÁĞ»¯£¬×öÊı×éÔªËØ£¬²»ĞèÒª¼üÃû³Æ
-* @param	pNode	pJsonArrayNode Êı×é½Úµã
-* @param	isContainsKey	BOOLEAN	ÊÇ·ñ°üº¬¼ü
-* @return	char*	ĞòÁĞ»¯×Ö·û´®
+* æ•°ç»„èŠ‚ç‚¹åºåˆ—åŒ–ï¼Œåšæ•°ç»„å…ƒç´ ï¼Œä¸éœ€è¦é”®åç§°
+* @param	pNode	pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	isContainsKey	BOOLEAN	æ˜¯å¦åŒ…å«é”®
+* @return	char*	åºåˆ—åŒ–å­—ç¬¦ä¸²
 */
 char* JSONStringifyArrayNode(pJsonArrayNode pNode, BOOLEAN isContainsKey);
 
 /*
-* ¶ÔÏó½ÚµãĞòÁĞ»¯£¬×öÊı×éÔªËØ£¬²»ĞèÒª¼üÃû³Æ
-* @param	pNode	pJsonObjectNode Êı×é½Úµã
-* @param	isContainsKey	BOOLEAN	ÊÇ·ñ°üº¬¼ü
-* @return	char*	ĞòÁĞ»¯×Ö·û´®
+* å¯¹è±¡èŠ‚ç‚¹åºåˆ—åŒ–ï¼Œåšæ•°ç»„å…ƒç´ ï¼Œä¸éœ€è¦é”®åç§°
+* @param	pNode	pJsonObjectNode æ•°ç»„èŠ‚ç‚¹
+* @param	isContainsKey	BOOLEAN	æ˜¯å¦åŒ…å«é”®
+* @return	char*	åºåˆ—åŒ–å­—ç¬¦ä¸²
 */
 char* JSONStringifyObjectNode(pJsonObjectNode pNode, BOOLEAN isContainsKey);
 
 /*
-* null ½ÚµãĞòÁĞ»¯£¬×öÊı×éÔªËØ£¬²»ĞèÒª¼üÃû³Æ
-* @param	pNode	pJsonNullNode null½Úµã
-* @param	isContainsKey	BOOLEAN	ÊÇ·ñ°üº¬¼ü
-* @return	char*	ĞòÁĞ»¯×Ö·û´®
+* null èŠ‚ç‚¹åºåˆ—åŒ–ï¼Œåšæ•°ç»„å…ƒç´ ï¼Œä¸éœ€è¦é”®åç§°
+* @param	pNode	pJsonNullNode nullèŠ‚ç‚¹
+* @param	isContainsKey	BOOLEAN	æ˜¯å¦åŒ…å«é”®
+* @return	char*	åºåˆ—åŒ–å­—ç¬¦ä¸²
 */
 char* JSONStringifyNullNode(pJsonNullNode pNode, BOOLEAN isContainsKey);
 
 /*
-* Boolean ½ÚµãĞòÁĞ»¯£¬×öÊı×éÔªËØ£¬²»ĞèÒª¼üÃû³Æ
-* @param	pNode	pJsonBooleanNode Boolean½Úµã
-* @param	isContainsKey	BOOLEAN	ÊÇ·ñ°üº¬¼ü
-* @return	char*	ĞòÁĞ»¯×Ö·û´®
+* Boolean èŠ‚ç‚¹åºåˆ—åŒ–ï¼Œåšæ•°ç»„å…ƒç´ ï¼Œä¸éœ€è¦é”®åç§°
+* @param	pNode	pJsonBooleanNode BooleanèŠ‚ç‚¹
+* @param	isContainsKey	BOOLEAN	æ˜¯å¦åŒ…å«é”®
+* @return	char*	åºåˆ—åŒ–å­—ç¬¦ä¸²
 */
 char* JSONStringifyBooleanNode(pJsonBooleanNode pNode, BOOLEAN isContainsKey);
 
 /*
-* È¥µô×Ö·û´®ÖĞ¶àÓàµÄ¶ººÅ
-* @param	input	char* ĞèÒªÈ¥¶ººÅµÄ×Ö·û´®
-* @return	char*	È¥¶ººÅºóµÄ×Ö·û´®
+* å»æ‰å­—ç¬¦ä¸²ä¸­å¤šä½™çš„é€—å·
+* @param	input	char* éœ€è¦å»é€—å·çš„å­—ç¬¦ä¸²
+* @return	char*	å»é€—å·åçš„å­—ç¬¦ä¸²
 */
 char* JSONStringRemoveComma(char* input /* in */);
 
 /*
-* ÅĞ¶Ï ¼üÊÇ·ñÓĞĞ§
-* @param	input	char* ÊäÈëµÄ¼ü
-* @param	len		int	  ³¤¶È
-* @return	BOOLEAN		¼üÃû³ÆÊÇ·ñºÏ·¨
+* åˆ¤æ–­ é”®æ˜¯å¦æœ‰æ•ˆ
+* @param	input	char* è¾“å…¥çš„é”®
+* @param	len		int	  é•¿åº¦
+* @return	BOOLEAN		é”®åç§°æ˜¯å¦åˆæ³•
 */
 BOOLEAN JSONKeyIsOk(char* input /* in */, int len /* in */);
 
 /*
-* json ×Ö·û´®È¥¿Õ¸ñµÈ²»¿É¼û×Ö·û
-* @param	input	char*	ĞèÒªÈ¥¿Õ¸ñµÄ×Ö·û´®
-* @return	char*	È¥¿Õ¸ñºóµÄ×Ö·û´®
+* json å­—ç¬¦ä¸²å»ç©ºæ ¼ç­‰ä¸å¯è§å­—ç¬¦
+* @param	input	char*	éœ€è¦å»ç©ºæ ¼çš„å­—ç¬¦ä¸²
+* @return	char*	å»ç©ºæ ¼åçš„å­—ç¬¦ä¸²
 */
 char* JSONStringTrim(char* input /* in */);
 
 /*
-* null ÀàĞÍ¼üÖµ¶Ô×Ö·û´®¸ñÊ½ÊÇ·ñºÏ·¨
-* @param	input char* ÊäÈëµÄ×Ö·û´®
-* @param	len		int	  ³¤¶È
-* @param	isHasKey	BOOLEAN ÊÇ·ñ°üº¬¼ü
-* @return	BOOLEAN		×Ö·û´®ºÏ·¨
+* null ç±»å‹é”®å€¼å¯¹å­—ç¬¦ä¸²æ ¼å¼æ˜¯å¦åˆæ³•
+* @param	input char* è¾“å…¥çš„å­—ç¬¦ä¸²
+* @param	len		int	  é•¿åº¦
+* @param	isHasKey	BOOLEAN æ˜¯å¦åŒ…å«é”®
+* @return	BOOLEAN		å­—ç¬¦ä¸²åˆæ³•
 */
 BOOLEAN JSONStringNullIsFormat(char* input /* in */, int len /* in */, BOOLEAN isHasKey /* in */);
 
 /*
-* Boolean ÀàĞÍ¼üÖµ¶Ô×Ö·û´®¸ñÊ½ÊÇ·ñºÏ·¨
-* @param	input char* ÊäÈëµÄ×Ö·û´®
-* @param	len		int	  ³¤¶È
-* @param	isHasKey	BOOLEAN ÊÇ·ñ°üº¬¼ü
-* @return	BOOLEAN		×Ö·û´®ºÏ·¨
+* Boolean ç±»å‹é”®å€¼å¯¹å­—ç¬¦ä¸²æ ¼å¼æ˜¯å¦åˆæ³•
+* @param	input char* è¾“å…¥çš„å­—ç¬¦ä¸²
+* @param	len		int	  é•¿åº¦
+* @param	isHasKey	BOOLEAN æ˜¯å¦åŒ…å«é”®
+* @return	BOOLEAN		å­—ç¬¦ä¸²åˆæ³•
 */
 BOOLEAN JSONStringBooleanIsFormat(char* input /* in */, int len /* in */, BOOLEAN isHasKey /* in */);
 
 /*
-* String ÀàĞÍ¼üÖµ¶Ô×Ö·û´®¸ñÊ½ÊÇ·ñºÏ·¨
-* @param	input char* ÊäÈëµÄ×Ö·û´®
-* @param	len		int	  ³¤¶È
-* @param	isHasKey	BOOLEAN ÊÇ·ñ°üº¬¼ü
-* @return	BOOLEAN		×Ö·û´®ºÏ·¨
+* String ç±»å‹é”®å€¼å¯¹å­—ç¬¦ä¸²æ ¼å¼æ˜¯å¦åˆæ³•
+* @param	input char* è¾“å…¥çš„å­—ç¬¦ä¸²
+* @param	len		int	  é•¿åº¦
+* @param	isHasKey	BOOLEAN æ˜¯å¦åŒ…å«é”®
+* @return	BOOLEAN		å­—ç¬¦ä¸²åˆæ³•
 */
 BOOLEAN JSONStringStringIsFormat(char* input /* in */, int len /* in */, BOOLEAN isHasKey /* in */);
 
 /*
-* Êı×ÖÀàĞÍ¼üÖµ¶Ô×Ö·û´®¸ñÊ½ÊÇ·ñºÏ·¨
-* @param	input char* ÊäÈëµÄ×Ö·û´®
-* @param	len		int	  ³¤¶È
-* @param	isHasKey	BOOLEAN ÊÇ·ñ°üº¬¼ü
-* @return	BOOLEAN		×Ö·û´®ºÏ·¨
+* æ•°å­—ç±»å‹é”®å€¼å¯¹å­—ç¬¦ä¸²æ ¼å¼æ˜¯å¦åˆæ³•
+* @param	input char* è¾“å…¥çš„å­—ç¬¦ä¸²
+* @param	len		int	  é•¿åº¦
+* @param	isHasKey	BOOLEAN æ˜¯å¦åŒ…å«é”®
+* @return	BOOLEAN		å­—ç¬¦ä¸²åˆæ³•
 */
 BOOLEAN JSONStringNumberIsFormat(char* input /* in */, int len /* in */, BOOLEAN isHasKey /* in */);
 
 /*
-* Array ÀàĞÍ¼üÖµ¶Ô×Ö·û´®¸ñÊ½ÊÇ·ñºÏ·¨
-* @param	input char* ÊäÈëµÄ×Ö·û´®
-* @param	len		int	  ³¤¶È
-* @param	isHasKey	BOOLEAN ÊÇ·ñ°üº¬¼ü
-* @return	BOOLEAN		×Ö·û´®ºÏ·¨
+* Array ç±»å‹é”®å€¼å¯¹å­—ç¬¦ä¸²æ ¼å¼æ˜¯å¦åˆæ³•
+* @param	input char* è¾“å…¥çš„å­—ç¬¦ä¸²
+* @param	len		int	  é•¿åº¦
+* @param	isHasKey	BOOLEAN æ˜¯å¦åŒ…å«é”®
+* @return	BOOLEAN		å­—ç¬¦ä¸²åˆæ³•
 */
 BOOLEAN JSONStringArrayIsFormat(char* input /* in */, int len /* in */, BOOLEAN isHasKey /* in */);
 
 /*
-* Object ÀàĞÍ¼üÖµ¶Ô×Ö·û´®¸ñÊ½ÊÇ·ñºÏ·¨
-* @param	input char* ÊäÈëµÄ×Ö·û´®
-* @param	len		int	  ³¤¶È
-* @param	isHasKey	BOOLEAN ÊÇ·ñ°üº¬¼ü
-* @return	BOOLEAN		×Ö·û´®ºÏ·¨
+* Object ç±»å‹é”®å€¼å¯¹å­—ç¬¦ä¸²æ ¼å¼æ˜¯å¦åˆæ³•
+* @param	input char* è¾“å…¥çš„å­—ç¬¦ä¸²
+* @param	len		int	  é•¿åº¦
+* @param	isHasKey	BOOLEAN æ˜¯å¦åŒ…å«é”®
+* @return	BOOLEAN		å­—ç¬¦ä¸²åˆæ³•
 */
 BOOLEAN JSONStringObjectIsFormat(char* input /* in */, int len /* in */, BOOLEAN isHasKey /* in */);
 
 /*
-* ÅĞ¶Ï json ×Ö·û´®ÊÇ·ñºÏ·¨
-* @param	input	char*	ĞèÒª½âÎöµÄ×Ö·û´®
-* @return	BOOLEAN			·ûºÏ¸ñÊ½ÒªÇó£¬·µ»Ø BTRUE ·ñÔò·µ»Ø BFALSE
+* åˆ¤æ–­ json å­—ç¬¦ä¸²æ˜¯å¦åˆæ³•
+* @param	input	char*	éœ€è¦è§£æçš„å­—ç¬¦ä¸²
+* @return	BOOLEAN			ç¬¦åˆæ ¼å¼è¦æ±‚ï¼Œè¿”å› BTRUE å¦åˆ™è¿”å› BFALSE
 */
 BOOLEAN JSONStringIsFormat(char* input /* in */);
 
 /*
-* ×Ö·û´®ÊÇ·ñÊÇÊı×é
-* @param	input char* ÊäÈëµÄ×Ö·û´®
-* @param	len		int	  ³¤¶È
-* @return	BOOLEAN		×Ö·û´®ºÏ·¨
+* å­—ç¬¦ä¸²æ˜¯å¦æ˜¯æ•°ç»„
+* @param	input char* è¾“å…¥çš„å­—ç¬¦ä¸²
+* @param	len		int	  é•¿åº¦
+* @return	BOOLEAN		å­—ç¬¦ä¸²åˆæ³•
 */
 BOOLEAN strIsArray(char* input /* in */, int len /* in */);
 
 /*
-* ×Ö·û´®ÊÇ·ñÊÇ¶ÔÏó
-* @param	input char* ÊäÈëµÄ×Ö·û´®
-* @param	len		int	  ³¤¶È
-* @return	BOOLEAN		×Ö·û´®ºÏ·¨
+* å­—ç¬¦ä¸²æ˜¯å¦æ˜¯å¯¹è±¡
+* @param	input char* è¾“å…¥çš„å­—ç¬¦ä¸²
+* @param	len		int	  é•¿åº¦
+* @return	BOOLEAN		å­—ç¬¦ä¸²åˆæ³•
 */
 BOOLEAN strIsObject(char* input /* in */, int len /* in */);
 
 /*
-* ¸ñÊ½»¯ json Êı×é
-* @param	input	char* ĞèÒª¸ñÊ½»¯µÄ×Ö·û´®
+* æ ¼å¼åŒ– json æ•°ç»„
+* @param	input	char* éœ€è¦æ ¼å¼åŒ–çš„å­—ç¬¦ä¸²
 * @return	pJsonArrayNode
 */
 pJsonArrayNode JSONParseArray(char* input /* in */);
 
 /*
-* ¸ñÊ½»¯ json ¶ÔÏó
-* @param	input	char* ĞèÒª¸ñÊ½»¯µÄ×Ö·û´®
+* æ ¼å¼åŒ– json å¯¹è±¡
+* @param	input	char* éœ€è¦æ ¼å¼åŒ–çš„å­—ç¬¦ä¸²
 * @return	pJsonObjectNode
 */
 pJsonObjectNode JSONParseObject(char* input /* in */);
@@ -357,13 +372,13 @@ pJsonObjectNode JSONParseObject(char* input /* in */);
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
-// ¸ñÊ½»¯µÄÊ±ºò£¬Õë¶Ô²»Í¬µÄ½á¹¹½øĞĞ·ÖÀà¸ñÊ½»¯
+// æ ¼å¼åŒ–çš„æ—¶å€™ï¼Œé’ˆå¯¹ä¸åŒçš„ç»“æ„è¿›è¡Œåˆ†ç±»æ ¼å¼åŒ–
 
 /*
-* ×Ö·û´®ÊÇ·ñÊÇÊı×Ö
-* @param	input char* ÊäÈëµÄ×Ö·û´®
-* @param	len		int	  ³¤¶È
-* @return	BOOLEAN		×Ö·û´®ºÏ·¨
+* å­—ç¬¦ä¸²æ˜¯å¦æ˜¯æ•°å­—
+* @param	input char* è¾“å…¥çš„å­—ç¬¦ä¸²
+* @param	len		int	  é•¿åº¦
+* @return	BOOLEAN		å­—ç¬¦ä¸²åˆæ³•
 */
 BOOLEAN strIsNumber(char* input /* in */, int len /* in */) {
 	BOOLEAN res = BFALSE;
@@ -388,8 +403,8 @@ BOOLEAN strIsNumber(char* input /* in */, int len /* in */) {
 		}
 		
 		char ch = 0;
-		BOOLEAN badChar = BFALSE; // ²»ºÏ·¨×Ö·û
-		// Ôò´ËÊ±Îª´¿Êı×Ö
+		BOOLEAN badChar = BFALSE; // ä¸åˆæ³•å­—ç¬¦
+		// åˆ™æ­¤æ—¶ä¸ºçº¯æ•°å­—
 		for (int j = 0; j < len; j++) {
 			ch = buf[j] & 0xFF;
 			if ((ch < '0' && (ch != '.' && ch != '+')) || (ch > '9' && (ch != 'e' && ch != 'E'))) {
@@ -402,18 +417,18 @@ BOOLEAN strIsNumber(char* input /* in */, int len /* in */) {
 			break;
 		}
 		char* p = NULL;
-		// ¿ÆÑ§¼ÇÊı·¨
-		if ((p = strstr(buf, "e+")) || (p = strstr(buf, "E+"))) {
+		// ç§‘å­¦è®°æ•°æ³•
+		if ((p = strstr(buf, "e+")) != NULL || (p = strstr(buf, "E+")) != NULL) {
 			if (strlen(p) == 2) {
 				badChar = BTRUE;
 				goto STR_IS_NUMBER_LABLE;
 			}
-			// ÅĞ¶Ï¿ÆÑ§¼ÇÊı·¨Ö¸ÊıÊÇ·ñºÏ·¨
+			// åˆ¤æ–­ç§‘å­¦è®°æ•°æ³•æŒ‡æ•°æ˜¯å¦åˆæ³•
 			if (strstr(p + 2, "e") || strstr(p + 2, "E") || strstr(p + 2, "+") || strstr(p + 2, ".")) {
 				badChar = BTRUE;
 				goto STR_IS_NUMBER_LABLE;
 			}
-			// ÅĞ¶Ï¿ÆÑ§¼ÇÊı·¨±¶ÊıÊÇ·ñºÏ·¨
+			// åˆ¤æ–­ç§‘å­¦è®°æ•°æ³•å€æ•°æ˜¯å¦åˆæ³•
 			p[0] = 0;
 			if (strstr(buf, "e") || strstr(buf, "E") || strstr(buf, "+")) {
 				badChar = BTRUE;
@@ -427,7 +442,7 @@ BOOLEAN strIsNumber(char* input /* in */, int len /* in */) {
 				badChar = BTRUE;
 				goto STR_IS_NUMBER_LABLE;
 			}
-			if (p = strstr(buf, ".")) {
+			if ((p = strstr(buf, ".")) != NULL) {
 				if (strstr(p + 1, ".")) {
 					badChar = BTRUE;
 					goto STR_IS_NUMBER_LABLE;
@@ -441,13 +456,13 @@ BOOLEAN strIsNumber(char* input /* in */, int len /* in */) {
 			}
 		}
 		else {
-			// Ê®½øÖÆ±íÊ¾·¨
+			// åè¿›åˆ¶è¡¨ç¤ºæ³•
 			char* p = NULL;
 			if (strstr(buf, "e") || strstr(buf, "E") || strstr(buf, "+")) {
 				badChar = BTRUE;
 				goto STR_IS_NUMBER_LABLE;
 			}
-			if (p = strstr(buf, ".")) {
+			if ((p = strstr(buf, ".")) != NULL) {
 				if (strstr(p + 1, ".")) {
 					badChar = BTRUE;
 					goto STR_IS_NUMBER_LABLE;
@@ -475,10 +490,10 @@ BOOLEAN strIsNumber(char* input /* in */, int len /* in */) {
 }
 
 /*
-* ×Ö·û´®ÊÇ·ñÊÇ×Ö·û´®
-* @param	input char* ÊäÈëµÄ×Ö·û´®
-* @param	len		int	  ³¤¶È
-* @return	BOOLEAN		×Ö·û´®ºÏ·¨
+* å­—ç¬¦ä¸²æ˜¯å¦æ˜¯å­—ç¬¦ä¸²
+* @param	input char* è¾“å…¥çš„å­—ç¬¦ä¸²
+* @param	len		int	  é•¿åº¦
+* @return	BOOLEAN		å­—ç¬¦ä¸²åˆæ³•
 */
 BOOLEAN strIsString(char* input /* in */, int len /* in */) {
 	BOOLEAN res = BFALSE;
@@ -492,9 +507,7 @@ BOOLEAN strIsString(char* input /* in */, int len /* in */) {
 		}
 		memset(buf, 0, len + 1);
 		memcpy(buf, input, len);
-		char ch = 0;
 		int len = strlen(buf);
-		BOOLEAN badChar = BFALSE; // ²»ºÏ·¨×Ö·û
 		if (len < 2) {
 			free(buf);
 			break;
@@ -514,10 +527,10 @@ BOOLEAN strIsString(char* input /* in */, int len /* in */) {
 }
 
 /*
-* ×Ö·û´®ÊÇ·ñÊÇ null
-* @param	input char* ÊäÈëµÄ×Ö·û´®
-* @param	len		int	  ³¤¶È
-* @return	BOOLEAN		×Ö·û´®ºÏ·¨
+* å­—ç¬¦ä¸²æ˜¯å¦æ˜¯ null
+* @param	input char* è¾“å…¥çš„å­—ç¬¦ä¸²
+* @param	len		int	  é•¿åº¦
+* @return	BOOLEAN		å­—ç¬¦ä¸²åˆæ³•
 */
 BOOLEAN strIsNull(char* input /* in */, int len /* in */) {
 	BOOLEAN res = BFALSE;
@@ -542,10 +555,10 @@ BOOLEAN strIsNull(char* input /* in */, int len /* in */) {
 }
 
 /*
-* ×Ö·û´®ÊÇ·ñÊÇ Boolean
-* @param	input char* ÊäÈëµÄ×Ö·û´®
-* @param	len		int	  ³¤¶È
-* @return	BOOLEAN		×Ö·û´®ºÏ·¨
+* å­—ç¬¦ä¸²æ˜¯å¦æ˜¯ Boolean
+* @param	input char* è¾“å…¥çš„å­—ç¬¦ä¸²
+* @param	len		int	  é•¿åº¦
+* @return	BOOLEAN		å­—ç¬¦ä¸²åˆæ³•
 */
 BOOLEAN strIsBoolean(char* input /* in */, int len /* in */) {
 	BOOLEAN res = BFALSE;
@@ -570,10 +583,10 @@ BOOLEAN strIsBoolean(char* input /* in */, int len /* in */) {
 }
 
 /*
-* ×Ö·û´®ÊÇ·ñÊÇÊı×é
-* @param	input char* ÊäÈëµÄ×Ö·û´®
-* @param	len		int	  ³¤¶È
-* @return	BOOLEAN		×Ö·û´®ºÏ·¨
+* å­—ç¬¦ä¸²æ˜¯å¦æ˜¯æ•°ç»„
+* @param	input char* è¾“å…¥çš„å­—ç¬¦ä¸²
+* @param	len		int	  é•¿åº¦
+* @return	BOOLEAN		å­—ç¬¦ä¸²åˆæ³•
 */
 BOOLEAN strIsArray(char* input /* in */, int len /* in */) {
 	BOOLEAN res = BFALSE;
@@ -600,7 +613,7 @@ BOOLEAN strIsArray(char* input /* in */, int len /* in */) {
 		for (int i = 1; i < len - 1; i++) {
 			int idx = 0;
 			if (buf[i] == '\"') {
-				// ±êÖ¾½ÓÏÂÀ´µÄÔªËØÊÇ×Ö·û´®
+				// æ ‡å¿—æ¥ä¸‹æ¥çš„å…ƒç´ æ˜¯å­—ç¬¦ä¸²
 				idx = i + 1;
 				while (idx <= len - 2) {
 					if (buf[idx] == '\"') {
@@ -612,9 +625,9 @@ BOOLEAN strIsArray(char* input /* in */, int len /* in */) {
 					idx--;
 				}
 				if (buf[idx] == '\"') {
-					// ÒÑ¾­Æ¥Åäµ½×î½üµÄÒıºÅ
+					// å·²ç»åŒ¹é…åˆ°æœ€è¿‘çš„å¼•å·
 					if (idx == len - 2) {
-						// ´ËÊ±×Ö·û´®ÊÇ×îºóÒ»¸öÔªËØ£¬ÅĞ¶Ï×Ö·û´®ÊÇ·ñºÏ·¨
+						// æ­¤æ—¶å­—ç¬¦ä¸²æ˜¯æœ€åä¸€ä¸ªå…ƒç´ ï¼Œåˆ¤æ–­å­—ç¬¦ä¸²æ˜¯å¦åˆæ³•
 						badChar = !strIsString(buf+i, idx + 1 - i);
 						break;
 					}
@@ -623,12 +636,12 @@ BOOLEAN strIsArray(char* input /* in */, int len /* in */) {
 						if (badChar) {
 							break;
 						}
-						// ¾àÀë½áÎ²Ö»ÓĞÒ»¸ö×Ö·ûÁË£¬²»×ãÒÔ´æ·ÅÊı¾İ
+						// è·ç¦»ç»“å°¾åªæœ‰ä¸€ä¸ªå­—ç¬¦äº†ï¼Œä¸è¶³ä»¥å­˜æ”¾æ•°æ®
 						if (idx == len - 3) {
 							badChar = BTRUE;
 							break;
 						}
-						// ÏÂÒ»¸ö×Ö·û²»ÊÇÊı×é·Ö¸î·û
+						// ä¸‹ä¸€ä¸ªå­—ç¬¦ä¸æ˜¯æ•°ç»„åˆ†å‰²ç¬¦
 						if (buf[idx+1] != ',') {
 							badChar = BTRUE;
 							break;
@@ -637,14 +650,14 @@ BOOLEAN strIsArray(char* input /* in */, int len /* in */) {
 					}
 				}
 				else {
-					// Ã»ÓĞÆ¥Åäµ½
+					// æ²¡æœ‰åŒ¹é…åˆ°
 					badChar = BTRUE;
 					break;
 				}
 			}
 			else if (buf[i] == '[') {
-				// ±êÖ¾½ÓÏÂÀ´µÄÊôĞÔÊÇÊı×é
-				// ĞèÒªË÷Òıµ½Æ¥ÅäµÄÊı×é·ûºÅ
+				// æ ‡å¿—æ¥ä¸‹æ¥çš„å±æ€§æ˜¯æ•°ç»„
+				// éœ€è¦ç´¢å¼•åˆ°åŒ¹é…çš„æ•°ç»„ç¬¦å·
 				int markCount = 1;
 				idx = i + 1;
 				int quotCount = 0;
@@ -669,16 +682,16 @@ BOOLEAN strIsArray(char* input /* in */, int len /* in */) {
 					idx--;
 				}
 				if (markCount != 0) {
-					// Êı×é²»Æ¥Åä
+					// æ•°ç»„ä¸åŒ¹é…
 					badChar = BTRUE;
 					break;
 				}
 				badChar = !strIsArray(buf + i, idx + 1 - i);
 			}
 			else if (buf[i] == '{') {
-				// ±êÖ¾½ÓÏÂÀ´ÊÇ¶ÔÏó
-				// ±êÖ¾½ÓÏÂÀ´µÄÊôĞÔÊÇÊı×é
-				// ĞèÒªË÷Òıµ½Æ¥ÅäµÄÊı×é·ûºÅ
+				// æ ‡å¿—æ¥ä¸‹æ¥æ˜¯å¯¹è±¡
+				// æ ‡å¿—æ¥ä¸‹æ¥çš„å±æ€§æ˜¯æ•°ç»„
+				// éœ€è¦ç´¢å¼•åˆ°åŒ¹é…çš„æ•°ç»„ç¬¦å·
 				int markCount = 1;
 				idx = i + 1;
 				int quotCount = 0;
@@ -703,14 +716,14 @@ BOOLEAN strIsArray(char* input /* in */, int len /* in */) {
 					idx--;
 				}
 				if (markCount != 0) {
-					// Êı×é²»Æ¥Åä
+					// æ•°ç»„ä¸åŒ¹é…
 					badChar = BTRUE;
 					break;
 				}
 				badChar = !strIsObject(buf + i, idx + 1 - i);
 			}
 			else if (buf[i] == 'f' || buf[i] == 't') {
-				// ±êÖ¾½ÓÏÂÀ´ÊÇ true »ò false
+				// æ ‡å¿—æ¥ä¸‹æ¥æ˜¯ true æˆ– false
 				idx = i + 1;
 				while (idx <= len - 2) {
 					if (buf[idx] == ',') {
@@ -724,8 +737,8 @@ BOOLEAN strIsArray(char* input /* in */, int len /* in */) {
 				badChar = !strIsBoolean(buf + i, idx + 1 - i);
 			}
 			else if (buf[i] == 'n') {
-				// ±êÖ¾½ÓÏÂÀ´ÊÇ null
-				// ±êÖ¾½ÓÏÂÀ´ÊÇ true »ò false
+				// æ ‡å¿—æ¥ä¸‹æ¥æ˜¯ null
+				// æ ‡å¿—æ¥ä¸‹æ¥æ˜¯ true æˆ– false
 				idx = i + 1;
 				while (idx <= len - 2) {
 					if (buf[idx] == ',') {
@@ -740,7 +753,7 @@ BOOLEAN strIsArray(char* input /* in */, int len /* in */) {
 				badChar = !strIsNull(buf + i, idx + 1 - i);
 			}
 			else if (('0' <= buf[i] && buf[i] <= '9') || buf[i] == '-') {
-				// ½ÓÏÂÀ´ÊÇÊı×Ö
+				// æ¥ä¸‹æ¥æ˜¯æ•°å­—
 				idx = i + 1;
 				while (idx <= len - 2) {
 					if (buf[idx] == ',') {
@@ -762,7 +775,7 @@ BOOLEAN strIsArray(char* input /* in */, int len /* in */) {
 			if (badChar) {
 				break;
 			}
-			// ÒÑ¾­µ½½áÎ²
+			// å·²ç»åˆ°ç»“å°¾
 			if (idx == len - 2) {
 				break;
 			}
@@ -770,7 +783,7 @@ BOOLEAN strIsArray(char* input /* in */, int len /* in */) {
 				badChar = BTRUE;
 				break;
 			}
-			// ÏÂÒ»¸ö×Ö·û²»ÊÇÊı×é·Ö¸î·û
+			// ä¸‹ä¸€ä¸ªå­—ç¬¦ä¸æ˜¯æ•°ç»„åˆ†å‰²ç¬¦
 			if (buf[idx + 1] != ',') {
 				badChar = BTRUE;
 				break;
@@ -787,10 +800,10 @@ BOOLEAN strIsArray(char* input /* in */, int len /* in */) {
 }
 
 /*
-* ×Ö·û´®ÊÇ·ñÊÇ¶ÔÏó
-* @param	input char* ÊäÈëµÄ×Ö·û´®
-* @param	len		int	  ³¤¶È
-* @return	BOOLEAN		×Ö·û´®ºÏ·¨
+* å­—ç¬¦ä¸²æ˜¯å¦æ˜¯å¯¹è±¡
+* @param	input char* è¾“å…¥çš„å­—ç¬¦ä¸²
+* @param	len		int	  é•¿åº¦
+* @return	BOOLEAN		å­—ç¬¦ä¸²åˆæ³•
 */
 BOOLEAN strIsObject(char* input /* in */, int len /* in */) {
 	BOOLEAN res = BFALSE;
@@ -814,7 +827,6 @@ BOOLEAN strIsObject(char* input /* in */, int len /* in */) {
 			break;
 		}
 		BOOLEAN badChar = BFALSE;
-		int idx = 0;
 		for (int i = 1; i < len - 1; i++) {
 			if (buf[i] == '\"') {
 				int idx = i + 1;
@@ -825,7 +837,7 @@ BOOLEAN strIsObject(char* input /* in */, int len /* in */) {
 					idx++;
 				}
 
-				// ±éÀúµ½½áÎ²£¬Î´ÔøÕÒµ½½áÎ²
+				// éå†åˆ°ç»“å°¾ï¼Œæœªæ›¾æ‰¾åˆ°ç»“å°¾
 				if (idx == len - 1) {
 					badChar = BTRUE;
 					break;
@@ -839,22 +851,22 @@ BOOLEAN strIsObject(char* input /* in */, int len /* in */) {
 						break;
 					}
 					else {
-						// ´Ë´¦ĞèÒª½øĞĞÅĞ¶ÏÊı¾İÀàĞÍÁË
+						// æ­¤å¤„éœ€è¦è¿›è¡Œåˆ¤æ–­æ•°æ®ç±»å‹äº†
 						int curIdx = idx + 2;
 						idx = curIdx + 1;
 						if (buf[curIdx] == '\"') {
-							// ÖµÎª×Ö·û´®
+							// å€¼ä¸ºå­—ç¬¦ä¸²
 							while (idx <= len - 2) {
 								if (buf[idx] == '\"') {
 									break;
 								}
 								idx++;
 							}
-							// ÒÑ¾­µ½½áÎ²ÁË£¬µ«ÊÇÃ»Æ¥Åäµ½×Ö·û´®
+							// å·²ç»åˆ°ç»“å°¾äº†ï¼Œä½†æ˜¯æ²¡åŒ¹é…åˆ°å­—ç¬¦ä¸²
 							badChar = !JSONStringStringIsFormat(buf + i, idx - i + 1, BTRUE);
 						}
 						else if (buf[curIdx] == '[') {
-							// ÖµÎªÊı×é
+							// å€¼ä¸ºæ•°ç»„
 							int markCount = 1;
 							int quotCount = 0;
 							while (idx <= len - 2) {
@@ -875,14 +887,14 @@ BOOLEAN strIsObject(char* input /* in */, int len /* in */) {
 								idx++;
 							}
 							if (markCount != 0) {
-								// Êı×é²»Æ¥Åä
+								// æ•°ç»„ä¸åŒ¹é…
 								badChar = BTRUE;
 								break;
 							}
 							badChar = !JSONStringArrayIsFormat(buf + i, idx - i + 1, BTRUE);
 						}
 						else if (buf[curIdx] == '{') {
-							// ÖµÎª¶ÔÏó
+							// å€¼ä¸ºå¯¹è±¡
 							int markCount = 1;
 							int quotCount = 0;
 							while (idx <= len - 2) {
@@ -903,14 +915,14 @@ BOOLEAN strIsObject(char* input /* in */, int len /* in */) {
 								idx++;
 							}
 							if (markCount != 0) {
-								// Êı×é²»Æ¥Åä
+								// æ•°ç»„ä¸åŒ¹é…
 								badChar = BTRUE;
 								break;
 							}
 							badChar = !JSONStringObjectIsFormat(buf + i, idx - i + 1, BTRUE);
 						}
 						else if (buf[curIdx] == 'n') {
-							// ÖµÎª null
+							// å€¼ä¸º null
 							while (idx <= len - 2) {
 								if (buf[idx] == ',') {
 									break;
@@ -924,7 +936,7 @@ BOOLEAN strIsObject(char* input /* in */, int len /* in */) {
 							badChar = !JSONStringNullIsFormat(buf + i, idx - i + 1, BTRUE);
 						}
 						else if (buf[curIdx] == 't' || buf[curIdx] == 'f') {
-							// ÖµÎª Boolean
+							// å€¼ä¸º Boolean
 							while (idx <= len - 2) {
 								if (buf[idx] == ',') {
 									break;
@@ -938,7 +950,7 @@ BOOLEAN strIsObject(char* input /* in */, int len /* in */) {
 							badChar = !JSONStringBooleanIsFormat(buf + i, idx - i + 1, BTRUE);
 						}
 						else if ((buf[curIdx] >= '0' && buf[curIdx] <= '9') || buf[curIdx] == '-') {
-							// ÖµÎª Number
+							// å€¼ä¸º Number
 							while (idx <= len - 2) {
 								if (buf[idx] == ',') {
 									break;
@@ -962,7 +974,7 @@ BOOLEAN strIsObject(char* input /* in */, int len /* in */) {
 							break;
 						}
 						else {
-							// ×Ö·û´®Îª×îºóÒ»¸öÔªËØ
+							// å­—ç¬¦ä¸²ä¸ºæœ€åä¸€ä¸ªå…ƒç´ 
 							if (idx == len - 2) {
 								break;
 							}
@@ -999,11 +1011,11 @@ BOOLEAN strIsObject(char* input /* in */, int len /* in */) {
 }
 
 /*
-* Êı×ÖÀàĞÍ¼üÖµ¶Ô×Ö·û´®¸ñÊ½ÊÇ·ñºÏ·¨
-* @param	input char* ÊäÈëµÄ×Ö·û´®
-* @param	len		int	  ³¤¶È
-* @param	isHasKey	BOOLEAN ÊÇ·ñ°üº¬¼ü
-* @return	BOOLEAN		×Ö·û´®ºÏ·¨
+* æ•°å­—ç±»å‹é”®å€¼å¯¹å­—ç¬¦ä¸²æ ¼å¼æ˜¯å¦åˆæ³•
+* @param	input char* è¾“å…¥çš„å­—ç¬¦ä¸²
+* @param	len		int	  é•¿åº¦
+* @param	isHasKey	BOOLEAN æ˜¯å¦åŒ…å«é”®
+* @return	BOOLEAN		å­—ç¬¦ä¸²åˆæ³•
 */
 BOOLEAN JSONStringNumberIsFormat(char* input /* in */, int len /* in */, BOOLEAN isHasKey /* in */) {
 	BOOLEAN res = BFALSE;
@@ -1011,12 +1023,12 @@ BOOLEAN JSONStringNumberIsFormat(char* input /* in */, int len /* in */, BOOLEAN
 		if (!input || len <= 0) {
 			break;
 		}
-		int quotationMarks		= 0; // ÒıºÅ¼ÆÊı
+		int quotationMarks		= 0; // å¼•å·è®¡æ•°
 		char ch					= 0;
-		int quotPosLeft			= 0; // ×óÒıºÅÎ»ÖÃ
-		int quotPosRight		= 0; // ÓÒÒıºÅÎ»ÖÃ
-		BOOLEAN badKey			= BFALSE; // ²»ºÏ·¨¼üÃû³Æ
-		BOOLEAN colonCount		= 0;//¼ÆÊı
+		int quotPosLeft			= 0; // å·¦å¼•å·ä½ç½®
+		int quotPosRight		= 0; // å³å¼•å·ä½ç½®
+		BOOLEAN badKey			= BFALSE; // ä¸åˆæ³•é”®åç§°
+		BOOLEAN colonCount		= 0;//è®¡æ•°
 		if (!isHasKey) {
 			badKey = !strIsNumber(input, len);
 			if (badKey) {
@@ -1071,11 +1083,11 @@ BOOLEAN JSONStringNumberIsFormat(char* input /* in */, int len /* in */, BOOLEAN
 }
 
 /*
-* null ÀàĞÍ¼üÖµ¶Ô×Ö·û´®¸ñÊ½ÊÇ·ñºÏ·¨
-* @param	input char* ÊäÈëµÄ×Ö·û´®
-* @param	len		int	  ³¤¶È
-* @param	isHasKey	BOOLEAN ÊÇ·ñ°üº¬¼ü
-* @return	BOOLEAN		×Ö·û´®ºÏ·¨
+* null ç±»å‹é”®å€¼å¯¹å­—ç¬¦ä¸²æ ¼å¼æ˜¯å¦åˆæ³•
+* @param	input char* è¾“å…¥çš„å­—ç¬¦ä¸²
+* @param	len		int	  é•¿åº¦
+* @param	isHasKey	BOOLEAN æ˜¯å¦åŒ…å«é”®
+* @return	BOOLEAN		å­—ç¬¦ä¸²åˆæ³•
 */
 BOOLEAN JSONStringNullIsFormat(char* input /* in */, int len /* in */, BOOLEAN isHasKey /* in */) {
 	BOOLEAN res = BFALSE;
@@ -1083,12 +1095,12 @@ BOOLEAN JSONStringNullIsFormat(char* input /* in */, int len /* in */, BOOLEAN i
 		if (!input || len <= 3) {
 			break;
 		}
-		int quotationMarks = 0; // ÒıºÅ¼ÆÊı
+		int quotationMarks = 0; // å¼•å·è®¡æ•°
 		char ch = 0;
-		int quotPosLeft = 0; // ×óÒıºÅÎ»ÖÃ
-		int quotPosRight = 0; // ÓÒÒıºÅÎ»ÖÃ
-		BOOLEAN badKey = BFALSE; // ²»ºÏ·¨¼üÃû³Æ
-		BOOLEAN colonCount = 0;//¼ÆÊı
+		int quotPosLeft = 0; // å·¦å¼•å·ä½ç½®
+		int quotPosRight = 0; // å³å¼•å·ä½ç½®
+		BOOLEAN badKey = BFALSE; // ä¸åˆæ³•é”®åç§°
+		BOOLEAN colonCount = 0;//è®¡æ•°
 
 		if (!isHasKey) {
 			badKey = !strIsNull(input, len);
@@ -1145,11 +1157,11 @@ BOOLEAN JSONStringNullIsFormat(char* input /* in */, int len /* in */, BOOLEAN i
 }
 
 /*
-* Boolean ÀàĞÍ¼üÖµ¶Ô×Ö·û´®¸ñÊ½ÊÇ·ñºÏ·¨
-* @param	input char* ÊäÈëµÄ×Ö·û´®
-* @param	len		int	  ³¤¶È
-* @param	isHasKey	BOOLEAN ÊÇ·ñ°üº¬¼ü
-* @return	BOOLEAN		×Ö·û´®ºÏ·¨
+* Boolean ç±»å‹é”®å€¼å¯¹å­—ç¬¦ä¸²æ ¼å¼æ˜¯å¦åˆæ³•
+* @param	input char* è¾“å…¥çš„å­—ç¬¦ä¸²
+* @param	len		int	  é•¿åº¦
+* @param	isHasKey	BOOLEAN æ˜¯å¦åŒ…å«é”®
+* @return	BOOLEAN		å­—ç¬¦ä¸²åˆæ³•
 */
 BOOLEAN JSONStringBooleanIsFormat(char* input /* in */, int len /* in */, BOOLEAN isHasKey /* in */) {
 	BOOLEAN res = BFALSE;
@@ -1157,12 +1169,12 @@ BOOLEAN JSONStringBooleanIsFormat(char* input /* in */, int len /* in */, BOOLEA
 		if (!input || len <= 3) {
 			break;
 		}
-		int quotationMarks = 0; // ÒıºÅ¼ÆÊı
+		int quotationMarks = 0; // å¼•å·è®¡æ•°
 		char ch = 0;
-		int quotPosLeft = 0; // ×óÒıºÅÎ»ÖÃ
-		int quotPosRight = 0; // ÓÒÒıºÅÎ»ÖÃ
-		BOOLEAN badKey = BFALSE; // ²»ºÏ·¨¼üÃû³Æ
-		BOOLEAN colonCount = 0;//¼ÆÊı
+		int quotPosLeft = 0; // å·¦å¼•å·ä½ç½®
+		int quotPosRight = 0; // å³å¼•å·ä½ç½®
+		BOOLEAN badKey = BFALSE; // ä¸åˆæ³•é”®åç§°
+		BOOLEAN colonCount = 0;//è®¡æ•°
 
 		if (!isHasKey) {
 			badKey = !strIsBoolean(input, len);
@@ -1219,11 +1231,11 @@ BOOLEAN JSONStringBooleanIsFormat(char* input /* in */, int len /* in */, BOOLEA
 }
 
 /*
-* String ÀàĞÍ¼üÖµ¶Ô×Ö·û´®¸ñÊ½ÊÇ·ñºÏ·¨
-* @param	input char* ÊäÈëµÄ×Ö·û´®
-* @param	len		int	  ³¤¶È
-* @param	isHasKey	BOOLEAN ÊÇ·ñ°üº¬¼ü
-* @return	BOOLEAN		×Ö·û´®ºÏ·¨
+* String ç±»å‹é”®å€¼å¯¹å­—ç¬¦ä¸²æ ¼å¼æ˜¯å¦åˆæ³•
+* @param	input char* è¾“å…¥çš„å­—ç¬¦ä¸²
+* @param	len		int	  é•¿åº¦
+* @param	isHasKey	BOOLEAN æ˜¯å¦åŒ…å«é”®
+* @return	BOOLEAN		å­—ç¬¦ä¸²åˆæ³•
 */
 BOOLEAN JSONStringStringIsFormat(char* input /* in */, int len /* in */, BOOLEAN isHasKey /* in */) {
 	BOOLEAN res = BFALSE;
@@ -1231,12 +1243,12 @@ BOOLEAN JSONStringStringIsFormat(char* input /* in */, int len /* in */, BOOLEAN
 		if (!input || len <= 1) {
 			break;
 		}
-		int quotationMarks = 0; // ÒıºÅ¼ÆÊı
+		int quotationMarks = 0; // å¼•å·è®¡æ•°
 		char ch = 0;
-		int quotPosLeft = 0; // ×óÒıºÅÎ»ÖÃ
-		int quotPosRight = 0; // ÓÒÒıºÅÎ»ÖÃ
-		BOOLEAN badKey = BFALSE; // ²»ºÏ·¨¼üÃû³Æ
-		BOOLEAN colonCount = 0;//¼ÆÊı
+		int quotPosLeft = 0; // å·¦å¼•å·ä½ç½®
+		int quotPosRight = 0; // å³å¼•å·ä½ç½®
+		BOOLEAN badKey = BFALSE; // ä¸åˆæ³•é”®åç§°
+		BOOLEAN colonCount = 0;//è®¡æ•°
 
 		if (!isHasKey) {
 			badKey = !strIsString(input, len);
@@ -1295,11 +1307,11 @@ BOOLEAN JSONStringStringIsFormat(char* input /* in */, int len /* in */, BOOLEAN
 }
 
 /*
-* Array ÀàĞÍ¼üÖµ¶Ô×Ö·û´®¸ñÊ½ÊÇ·ñºÏ·¨
-* @param	input char* ÊäÈëµÄ×Ö·û´®
-* @param	len		int	  ³¤¶È
-* @param	isHasKey	BOOLEAN ÊÇ·ñ°üº¬¼ü
-* @return	BOOLEAN		×Ö·û´®ºÏ·¨
+* Array ç±»å‹é”®å€¼å¯¹å­—ç¬¦ä¸²æ ¼å¼æ˜¯å¦åˆæ³•
+* @param	input char* è¾“å…¥çš„å­—ç¬¦ä¸²
+* @param	len		int	  é•¿åº¦
+* @param	isHasKey	BOOLEAN æ˜¯å¦åŒ…å«é”®
+* @return	BOOLEAN		å­—ç¬¦ä¸²åˆæ³•
 */
 BOOLEAN JSONStringArrayIsFormat(char* input /* in */, int len /* in */, BOOLEAN isHasKey /* in */) {
 	BOOLEAN res = BFALSE;
@@ -1307,12 +1319,12 @@ BOOLEAN JSONStringArrayIsFormat(char* input /* in */, int len /* in */, BOOLEAN 
 		if (!input || len <= 1) {
 			break;
 		}
-		int quotationMarks = 0; // ÒıºÅ¼ÆÊı
+		int quotationMarks = 0; // å¼•å·è®¡æ•°
 		char ch = 0;
-		int quotPosLeft = 0; // ×óÒıºÅÎ»ÖÃ
-		int quotPosRight = 0; // ÓÒÒıºÅÎ»ÖÃ
-		BOOLEAN badKey = BFALSE; // ²»ºÏ·¨¼üÃû³Æ
-		BOOLEAN colonCount = 0;//¼ÆÊı
+		int quotPosLeft = 0; // å·¦å¼•å·ä½ç½®
+		int quotPosRight = 0; // å³å¼•å·ä½ç½®
+		BOOLEAN badKey = BFALSE; // ä¸åˆæ³•é”®åç§°
+		BOOLEAN colonCount = 0;//è®¡æ•°
 		if (!isHasKey) {
 			badKey = !strIsArray(input, len);
 			if (badKey) {
@@ -1370,11 +1382,11 @@ BOOLEAN JSONStringArrayIsFormat(char* input /* in */, int len /* in */, BOOLEAN 
 }
 
 /*
-* Object ÀàĞÍ¼üÖµ¶Ô×Ö·û´®¸ñÊ½ÊÇ·ñºÏ·¨
-* @param	input char* ÊäÈëµÄ×Ö·û´®
-* @param	len		int	  ³¤¶È
-* @param	isHasKey	BOOLEAN ÊÇ·ñ°üº¬¼ü
-* @return	BOOLEAN		×Ö·û´®ºÏ·¨
+* Object ç±»å‹é”®å€¼å¯¹å­—ç¬¦ä¸²æ ¼å¼æ˜¯å¦åˆæ³•
+* @param	input char* è¾“å…¥çš„å­—ç¬¦ä¸²
+* @param	len		int	  é•¿åº¦
+* @param	isHasKey	BOOLEAN æ˜¯å¦åŒ…å«é”®
+* @return	BOOLEAN		å­—ç¬¦ä¸²åˆæ³•
 */
 BOOLEAN JSONStringObjectIsFormat(char* input /* in */, int len /* in */, BOOLEAN isHasKey /* in */) {
 	BOOLEAN res = BFALSE;
@@ -1382,12 +1394,12 @@ BOOLEAN JSONStringObjectIsFormat(char* input /* in */, int len /* in */, BOOLEAN
 		if (!input || len <= 1) {
 			break;
 		}
-		int quotationMarks = 0; // ÒıºÅ¼ÆÊı
+		int quotationMarks = 0; // å¼•å·è®¡æ•°
 		char ch = 0;
-		int quotPosLeft = 0; // ×óÒıºÅÎ»ÖÃ
-		int quotPosRight = 0; // ÓÒÒıºÅÎ»ÖÃ
-		BOOLEAN badKey = BFALSE; // ²»ºÏ·¨¼üÃû³Æ
-		BOOLEAN colonCount = 0;//¼ÆÊı
+		int quotPosLeft = 0; // å·¦å¼•å·ä½ç½®
+		int quotPosRight = 0; // å³å¼•å·ä½ç½®
+		BOOLEAN badKey = BFALSE; // ä¸åˆæ³•é”®åç§°
+		BOOLEAN colonCount = 0;//è®¡æ•°
 		if (!isHasKey) {
 			badKey = !strIsObject(input, len);
 			if (badKey) {
@@ -1445,9 +1457,9 @@ BOOLEAN JSONStringObjectIsFormat(char* input /* in */, int len /* in */, BOOLEAN
 }
 
 /*
-* È¥µô×Ö·û´®ÖĞ¶àÓàµÄ¶ººÅ
-* @param	input	char* ĞèÒªÈ¥¶ººÅµÄ×Ö·û´®
-* @return	char*	È¥¶ººÅºóµÄ×Ö·û´®
+* å»æ‰å­—ç¬¦ä¸²ä¸­å¤šä½™çš„é€—å·
+* @param	input	char* éœ€è¦å»é€—å·çš„å­—ç¬¦ä¸²
+* @return	char*	å»é€—å·åçš„å­—ç¬¦ä¸²
 */
 char* JSONStringRemoveComma(char* input /* in */) {
 	char* output = NULL;
@@ -1460,7 +1472,7 @@ char* JSONStringRemoveComma(char* input /* in */) {
 			break;
 		}
 		memset(output, 0, strlen(input) + 1);
-		// ÒıºÅ¼ÆÊı
+		// å¼•å·è®¡æ•°
 		int quotationMarks = 0;
 		char ch = 0;
 		int j = 0;
@@ -1491,9 +1503,9 @@ char* JSONStringRemoveComma(char* input /* in */) {
 }
 
 /*
-* ÅĞ¶Ï ¼üÊÇ·ñÓĞĞ§
-* @param	input	char* ÊäÈëµÄ¼ü
-* @param	len		int	  ³¤¶È
+* åˆ¤æ–­ é”®æ˜¯å¦æœ‰æ•ˆ
+* @param	input	char* è¾“å…¥çš„é”®
+* @param	len		int	  é•¿åº¦
 */
 BOOLEAN JSONKeyIsOk(char* input /* in */, int len /* in */) {
 	BOOLEAN res = BFALSE;
@@ -1505,7 +1517,7 @@ BOOLEAN JSONKeyIsOk(char* input /* in */, int len /* in */) {
 		char ch = 0;
 		for (int i = 0; i < len; i++) {
 			ch = input[i] & 0xFF;
-			if (0 <= ch && ch < 0x20) {
+			if (0 <= (ch & 0xFF) && (ch & 0xFF) < 0x20) {
 				isBad = BTRUE;
 			}
 		}
@@ -1518,9 +1530,9 @@ BOOLEAN JSONKeyIsOk(char* input /* in */, int len /* in */) {
 }
 
 /*
-* json ×Ö·û´®È¥¿Õ¸ñµÈ²»¿É¼û×Ö·û
-* @param	input	char*	ĞèÒªÈ¥¿Õ¸ñµÄ×Ö·û´®
-* @return	char*	È¥¿Õ¸ñºóµÄ×Ö·û´®
+* json å­—ç¬¦ä¸²å»ç©ºæ ¼ç­‰ä¸å¯è§å­—ç¬¦
+* @param	input	char*	éœ€è¦å»ç©ºæ ¼çš„å­—ç¬¦ä¸²
+* @return	char*	å»ç©ºæ ¼åçš„å­—ç¬¦ä¸²
 */
 char* JSONStringTrim(char* input /* in */) {
 	char* output = NULL;
@@ -1533,7 +1545,7 @@ char* JSONStringTrim(char* input /* in */) {
 			break;
 		}
 		memset(output, 0, strlen(input) + 1);
-		// ÒıºÅ¼ÆÊı
+		// å¼•å·è®¡æ•°
 		int quotationMarks = 0;
 		char ch = 0;
 		int j = 0;
@@ -1544,7 +1556,7 @@ char* JSONStringTrim(char* input /* in */) {
 				quotationMarks++;
 			}
 			if (quotationMarks % 2 == 0) {
-				if (ch >= 0x21 && ch <= 0x7D || ch < 0) {
+				if (((int)ch >= 0x21 && (int)ch <= 0x7D) || (int)ch < 0) {
 					output[j] = input[i];
 					j++;
 				}
@@ -1562,9 +1574,9 @@ char* JSONStringTrim(char* input /* in */) {
 }
 
 /*
-* ÅĞ¶Ï json ×Ö·û´®ÊÇ·ñºÏ·¨
-* @param	input	char*	ĞèÒª½âÎöµÄ×Ö·û´®
-* @return	BOOLEAN			·ûºÏ¸ñÊ½ÒªÇó£¬·µ»Ø BTRUE ·ñÔò·µ»Ø BFALSE
+* åˆ¤æ–­ json å­—ç¬¦ä¸²æ˜¯å¦åˆæ³•
+* @param	input	char*	éœ€è¦è§£æçš„å­—ç¬¦ä¸²
+* @return	BOOLEAN			ç¬¦åˆæ ¼å¼è¦æ±‚ï¼Œè¿”å› BTRUE å¦åˆ™è¿”å› BFALSE
 */
 BOOLEAN JSONStringIsFormat(char* input /* in */) {
 	BOOLEAN res = BFALSE;
@@ -1580,72 +1592,52 @@ BOOLEAN JSONStringIsFormat(char* input /* in */) {
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
-/*
-* ¼ÆËã md5 ¼ÓÃÜºóµÄ×Ö·û´®
-* @param input ĞèÒª¼ÓÃÜµÄ×Ö·û´®
-* @param output ¼ÓÃÜºóµÄ×Ö·û´®£¬ÄÚ´æ´óĞ¡±ØĞëÔÚ33¸ö×Ö½Ú
-* @return void
-*/
-void encryptionStr(char *input /* in */, char *output /* out */) {
-	MD5_CTX md5;
-	int i = 0;
-	char decrypt[16] = { 0 };
-	char tmp[3] = { 0 };
+/**
+ * è®¡ç®— md5 åŠ å¯†åçš„å­—ç¬¦ä¸²
+ * @param input éœ€è¦åŠ å¯†çš„å­—ç¬¦ä¸²
+ * @return unsigned int
+ */
+unsigned long int encryptionHashIndex(char *input /* in */) {
+	unsigned long int hash = 0;
 	do {
-		if (!input || !output) {
+		if (!input) {
 			break;
 		}
+		MD5_CTX md5 = {0};
+		unsigned char decrypt[16] = { 0 };
+		unsigned long int seed = 7;
+		
 		MD5Init(&md5);
-		MD5Update(&md5, input, strlen((char *)input));
+		MD5Update(&md5, (unsigned char*)input, strlen((char *)input));
 		MD5Final(&md5, decrypt);
-		for (i = 0; i<16; i++)
-		{
-			memset(tmp, 0, 3);
-			sprintf(tmp, "%02x", decrypt[i] & 0xFF);
-			strcat(output, tmp);
+		for (int i = 0; i < 16; i++){
+			hash += hash * seed + decrypt[i];
 		}
 	} while (0);
-}
-
-/*
-* ¸ù¾İ×Ö·û´®£¬¼ÆËãhashÖµ
-* @param input ĞèÒª¼ÆËãµÄ×Ö·û´®
-* @return unsigned long int ¼ÆËã½á¹û
-*/
-unsigned long int getHashVal(char *input /* in */) {
-	unsigned long int seed = 7;
-	unsigned  long int hash = 0;
-	while (*input != '\0')
-	{
-		hash += hash * seed + (*input) & 0xFF;
-		input++;
-	}
 	return hash % HASH_MAX;
 }
 
 /* 
-* ¸ù¾İ json key Öµ£¬×ª»»³É int Öµ
-* @param	key json ¼ü
+* æ ¹æ® json key å€¼ï¼Œè½¬æ¢æˆ int å€¼
+* @param	key json é”®
 * @return	int
 */
 int JSONGetHashIndex(char *key /* in */) {
 	int idx = -1;
-	char buf[33] = { 0 };
 	do {
 		if (!key) {
 			break;
 		}
-		encryptionStr(key, buf);
-		idx = getHashVal(buf);
+		idx = encryptionHashIndex(key);
 	} while (0);
-	//printf("ÊôĞÔ: %s, Ë÷Òı: %d\n", key, idx);
+	//printf("å±æ€§: %s, ç´¢å¼•: %d\n", key, idx);
 	return idx;
 }
 
 /*
-* Éî¿½±´×Ö·û´®
-* @param	input	ÊäÈëµÄ×Ö·û´®
-* @return	char*	·ÖÅäµÄ×Ö·û´®ÄÚ´æ
+* æ·±æ‹·è´å­—ç¬¦ä¸²
+* @param	input	è¾“å…¥çš„å­—ç¬¦ä¸²
+* @return	char*	åˆ†é…çš„å­—ç¬¦ä¸²å†…å­˜
 */
 char* deepCloneString(char* input /* in */) {
 	char* pRes = NULL;
@@ -1664,8 +1656,8 @@ char* deepCloneString(char* input /* in */) {
 }
 
 /*
-* ´´½¨ Object ¿Õ¶ÔÏó
-* @param	key		char* ¼üÃû³Æ
+* åˆ›å»º Object ç©ºå¯¹è±¡
+* @param	key		char* é”®åç§°
 * @return	pJsonObjectNode
 */
 pJsonObjectNode JSONCreateObjectNode(char* key /* in */) {
@@ -1673,14 +1665,14 @@ pJsonObjectNode JSONCreateObjectNode(char* key /* in */) {
 	do {
 		pObject = (pJsonObjectNode)malloc(sizeof(JsonObjectNode));
 		if (!pObject) {
-			// json¶ÔÏóÄÚ´æ·ÖÅäÊ§°Ü
+			// jsonå¯¹è±¡å†…å­˜åˆ†é…å¤±è´¥
 			break;
 		}
 		memset(pObject, 0, sizeof(JsonObjectNode));
 		if (key) {
 			pObject->node.keyName = deepCloneString(key);
 			if (!pObject->node.keyName) {
-				// ¿½±´Ãû³ÆÊ§°Ü£¬Ôò½ÚµãºÁÎŞÒâÒå
+				// æ‹·è´åç§°å¤±è´¥ï¼Œåˆ™èŠ‚ç‚¹æ¯«æ— æ„ä¹‰
 				JSONDestroyObjectNode(pObject);
 				break;
 			}
@@ -1691,10 +1683,10 @@ pJsonObjectNode JSONCreateObjectNode(char* key /* in */) {
 }
 
 /*
-* ´´½¨ Number ½Úµã
-* @param	key		char*	¼üÃû³Æ
-* @param	value	double	¼üÖµ
-* @return	pJsonNumberNode Number½ÚµãÖ¸Õë
+* åˆ›å»º Number èŠ‚ç‚¹
+* @param	key		char*	é”®åç§°
+* @param	value	double	é”®å€¼
+* @return	pJsonNumberNode NumberèŠ‚ç‚¹æŒ‡é’ˆ
 */
 pJsonNumberNode JSONCreateNumberNode(char* key /* in */, double value /* in */) {
 	pJsonNumberNode pNode = NULL;
@@ -1708,7 +1700,7 @@ pJsonNumberNode JSONCreateNumberNode(char* key /* in */, double value /* in */) 
 		if (key) {
 			pNode->node.keyName = deepCloneString(key);
 			if (!pNode->node.keyName) {
-				// ¿½±´Ãû³ÆÊ§°Ü£¬Ôò½ÚµãºÁÎŞÒâÒå
+				// æ‹·è´åç§°å¤±è´¥ï¼Œåˆ™èŠ‚ç‚¹æ¯«æ— æ„ä¹‰
 				JSONDestroyNumberNode(pNode);
 				break;
 			}
@@ -1721,10 +1713,40 @@ pJsonNumberNode JSONCreateNumberNode(char* key /* in */, double value /* in */) 
 }
 
 /*
-* ´´½¨ String ½Úµã
-* @param	key		char* ¼üÃû³Æ
-* @param	value	char* ¼üÖµ
-* @return	pJsonStringNode String½ÚµãÖ¸Õë
+* åˆ›å»º Number èŠ‚ç‚¹
+* @param	key		char*	é”®åç§°
+* @param	value	UINT64	é”®å€¼
+* @return	pJsonNumberNode NumberèŠ‚ç‚¹æŒ‡é’ˆ
+*/
+pJsonLongNumberNode JSONCreateLongNumberNode(char* key /* in */, UINT64 value /* in */) {
+	pJsonLongNumberNode pNode = NULL;
+
+	do {
+		pNode = (pJsonLongNumberNode)malloc(sizeof(JsonLongNumberNode));
+		if (!pNode) {
+			break;
+		}
+		memset(pNode, 0, sizeof(JsonLongNumberNode));
+		if (key) {
+			pNode->node.keyName = deepCloneString(key);
+			if (!pNode->node.keyName) {
+				// æ‹·è´åç§°å¤±è´¥ï¼Œåˆ™èŠ‚ç‚¹æ¯«æ— æ„ä¹‰
+				JSONDestroyLongNumberNode(pNode);
+				break;
+			}
+		}
+		pNode->node.type = JSONTYPELONGNUMBER;
+		pNode->value = value;
+	} while (0);
+
+	return pNode;
+}
+
+/*
+* åˆ›å»º String èŠ‚ç‚¹
+* @param	key		char* é”®åç§°
+* @param	value	char* é”®å€¼
+* @return	pJsonStringNode StringèŠ‚ç‚¹æŒ‡é’ˆ
 */
 pJsonStringNode JSONCreateStringNode(char* key /* in */, char* value /* in */) {
 	pJsonStringNode pNode = NULL;
@@ -1738,7 +1760,7 @@ pJsonStringNode JSONCreateStringNode(char* key /* in */, char* value /* in */) {
 		if (key) {
 			pNode->node.keyName = deepCloneString(key);
 			if (!pNode->node.keyName) {
-				// ¿½±´Ãû³ÆÊ§°Ü£¬Ôò½ÚµãºÁÎŞÒâÒå
+				// æ‹·è´åç§°å¤±è´¥ï¼Œåˆ™èŠ‚ç‚¹æ¯«æ— æ„ä¹‰
 				JSONDestroyStringNode(pNode);
 				break;
 			}
@@ -1751,9 +1773,9 @@ pJsonStringNode JSONCreateStringNode(char* key /* in */, char* value /* in */) {
 }
 
 /*
-* ´´½¨ Array ¿ÕÊı×é¶ÔÏó
-* @param	key		char* ¼üÃû³Æ
-* @return	pJsonArrayNode Array½ÚµãÖ¸Õë
+* åˆ›å»º Array ç©ºæ•°ç»„å¯¹è±¡
+* @param	key		char* é”®åç§°
+* @return	pJsonArrayNode ArrayèŠ‚ç‚¹æŒ‡é’ˆ
 */
 pJsonArrayNode JSONCreateArrayNode(char* key /* in */) {
 	pJsonArrayNode pNode = NULL;
@@ -1767,7 +1789,7 @@ pJsonArrayNode JSONCreateArrayNode(char* key /* in */) {
 		if (key) {
 			pNode->node.keyName = deepCloneString(key);
 			if (!pNode->node.keyName) {
-				// ¿½±´Ãû³ÆÊ§°Ü£¬Ôò½ÚµãºÁÎŞÒâÒå
+				// æ‹·è´åç§°å¤±è´¥ï¼Œåˆ™èŠ‚ç‚¹æ¯«æ— æ„ä¹‰
 				JSONDestroyArrayNode(pNode);
 				break;
 			}
@@ -1778,9 +1800,9 @@ pJsonArrayNode JSONCreateArrayNode(char* key /* in */) {
 }
 
 /*
-* ´´½¨ null ½Úµã
-* @param	key		char*	¼üÃû³Æ
-* @return	pJsonNullNode null½ÚµãÖ¸Õë
+* åˆ›å»º null èŠ‚ç‚¹
+* @param	key		char*	é”®åç§°
+* @return	pJsonNullNode nullèŠ‚ç‚¹æŒ‡é’ˆ
 */
 pJsonNullNode JSONCreateNullNode(char* key /* in */) {
 	pJsonNullNode pNode = NULL;
@@ -1794,7 +1816,7 @@ pJsonNullNode JSONCreateNullNode(char* key /* in */) {
 		if (key) {
 			pNode->node.keyName = deepCloneString(key);
 			if (!pNode->node.keyName) {
-				// ¿½±´Ãû³ÆÊ§°Ü£¬Ôò½ÚµãºÁÎŞÒâÒå
+				// æ‹·è´åç§°å¤±è´¥ï¼Œåˆ™èŠ‚ç‚¹æ¯«æ— æ„ä¹‰
 				JSONDestroyNullNode(pNode);
 				break;
 			}
@@ -1807,10 +1829,10 @@ pJsonNullNode JSONCreateNullNode(char* key /* in */) {
 }
 
 /*
-* ´´½¨ Boolean ½Úµã
-* @param	key		char*	¼üÃû³Æ
-* @param	value	BOOLEAN	¼üÖµ
-* @return	pJsonBooleanNode Boolean½ÚµãÖ¸Õë
+* åˆ›å»º Boolean èŠ‚ç‚¹
+* @param	key		char*	é”®åç§°
+* @param	value	BOOLEAN	é”®å€¼
+* @return	pJsonBooleanNode BooleanèŠ‚ç‚¹æŒ‡é’ˆ
 */
 pJsonBooleanNode JSONCreateBooleanNode(char* key /* in */, BOOLEAN value /* in */) {
 	pJsonBooleanNode pNode = NULL;
@@ -1824,7 +1846,7 @@ pJsonBooleanNode JSONCreateBooleanNode(char* key /* in */, BOOLEAN value /* in *
 		if (key) {
 			pNode->node.keyName = deepCloneString(key);
 			if (!pNode->node.keyName) {
-				// ¿½±´Ãû³ÆÊ§°Ü£¬Ôò½ÚµãºÁÎŞÒâÒå
+				// æ‹·è´åç§°å¤±è´¥ï¼Œåˆ™èŠ‚ç‚¹æ¯«æ— æ„ä¹‰
 				JSONDestroyBooleanNode(pNode);
 				break;
 			}
@@ -1837,24 +1859,24 @@ pJsonBooleanNode JSONCreateBooleanNode(char* key /* in */, BOOLEAN value /* in *
 }
 
 /*
-* ´´½¨ Object ¿Õ¶ÔÏó
+* åˆ›å»º Object ç©ºå¯¹è±¡
 * @return	pJsonObjectNode
 */
-pJsonObjectNode JSONCreate() {
+pJsonObjectNode JSONCreate(void) {
 	return JSONCreateObjectNode(NULL);
 }
 
 /*
-* ´´½¨ Array ¿ÕÊı×é
+* åˆ›å»º Array ç©ºæ•°ç»„
 * @return	pJsonArrayNode
 */
-pJsonArrayNode JSONCreateArray() {
+pJsonArrayNode JSONCreateArray(void) {
 	return JSONCreateArrayNode(NULL);
 }
 
 /*
-* ¸ñÊ½»¯ json Êı×é
-* @param	input	char* ĞèÒª¸ñÊ½»¯µÄ×Ö·û´®
+* æ ¼å¼åŒ– json æ•°ç»„
+* @param	input	char* éœ€è¦æ ¼å¼åŒ–çš„å­—ç¬¦ä¸²
 * @return	pJsonArrayNode
 */
 pJsonArrayNode JSONParseArray(char* input /* in */) {
@@ -1864,7 +1886,7 @@ pJsonArrayNode JSONParseArray(char* input /* in */) {
 			break;
 		}
 		int len = strlen(input);
-		// ×Ö·û´®¸ñÊ½ÒÑ¾­×öÁËĞ£Ñé£¬ËùÒÔÎŞĞè¿¼ÂÇ¸ñÊ½ÎÊÌâ
+		// å­—ç¬¦ä¸²æ ¼å¼å·²ç»åšäº†æ ¡éªŒï¼Œæ‰€ä»¥æ— éœ€è€ƒè™‘æ ¼å¼é—®é¢˜
 		pArray = JSONCreateArray();
 		if (!pArray || len == 2) {
 			break;
@@ -1873,7 +1895,7 @@ pJsonArrayNode JSONParseArray(char* input /* in */) {
 		char* element = NULL;
 		for (int i = 1; i < len - 1; i++) {
 			if (input[i] == '\"') {
-				// ÔªËØÊÇ×Ö·û´®
+				// å…ƒç´ æ˜¯å­—ç¬¦ä¸²
 				idx = i + 1;
 				while (idx <= len - 2) {
 					if (input[idx] == '\"') {
@@ -1907,15 +1929,25 @@ pJsonArrayNode JSONParseArray(char* input /* in */) {
 			else if ((input[i] >= '0' && input[i] <= '9') || input[i] == '-') {
 				double num = 0;
 				idx = i + 1;
+				int not_long = 0;
 				while (idx <= len - 2) {
+					if(input[idx] == '.' || input[idx] == '-'){
+						not_long = 1;
+					}
 					if (input[idx] == ',') {
 						break;
 					}
 					idx++;
 				}
 				idx--;
-				sscanf(input + i, "%lf", &num);
-				JSONArrayPushNumber(pArray, num);
+				sscanf(input + idx, "%lf", &num);
+				if(num > 2100000000 && !not_long){
+					UINT64 lNum = 0;
+					sscanf(input + idx, "%llu", &lNum);
+					JSONArrayPushLongNumber(pArray, lNum);
+				}else {
+					JSONArrayPushNumber(pArray, num);
+				}
 			}
 			else if (input[i] == '[') {
 				idx = i + 1;
@@ -1993,8 +2025,8 @@ pJsonArrayNode JSONParseArray(char* input /* in */) {
 }
 
 /*
-* ¸ñÊ½»¯ json ¶ÔÏó
-* @param	input	char* ĞèÒª¸ñÊ½»¯µÄ×Ö·û´®
+* æ ¼å¼åŒ– json å¯¹è±¡
+* @param	input	char* éœ€è¦æ ¼å¼åŒ–çš„å­—ç¬¦ä¸²
 * @return	pJsonObjectNode
 */
 pJsonObjectNode JSONParseObject(char* input /* in */) {
@@ -2004,7 +2036,7 @@ pJsonObjectNode JSONParseObject(char* input /* in */) {
 			break;
 		}
 		int len = strlen(input);
-		// ×Ö·û´®¸ñÊ½ÒÑ¾­×öÁËĞ£Ñé£¬ËùÒÔÎŞĞè¿¼ÂÇ¸ñÊ½ÎÊÌâ
+		// å­—ç¬¦ä¸²æ ¼å¼å·²ç»åšäº†æ ¡éªŒï¼Œæ‰€ä»¥æ— éœ€è€ƒè™‘æ ¼å¼é—®é¢˜
 		pObject = JSONCreate();
 		if (!pObject || len == 2) {
 			break;
@@ -2025,12 +2057,12 @@ pJsonObjectNode JSONParseObject(char* input /* in */) {
 				}
 				memset(key, 0, idx - i);
 				memcpy(key, input + i + 1, idx - i - 1);
-				///////////////////////// ¼ÇµÃÏú»Ù key //////////////////////////
+				///////////////////////// è®°å¾—é”€æ¯ key //////////////////////////
 				idx += 2;
 				int valIdx = 0;
 				char* value = NULL;
 				if (input[idx] == '\"') {
-					// ÖµÊÇ×Ö·û´®
+					// å€¼æ˜¯å­—ç¬¦ä¸²
 					valIdx = idx + 1;
 					while (valIdx <= len - 2) {
 						if (input[valIdx] == '\"') {
@@ -2038,8 +2070,8 @@ pJsonObjectNode JSONParseObject(char* input /* in */) {
 						}
 						valIdx++;
 					}
-					if (valIdx - idx == 2) {
-						// ¿Õ×Ö·û´®
+					if (valIdx - idx == 1) {
+						// ç©ºå­—ç¬¦ä¸²
 						JSONSetStringAttr(pObject, key, "");
 					}
 					else {
@@ -2055,12 +2087,12 @@ pJsonObjectNode JSONParseObject(char* input /* in */) {
 					}
 				}
 				else if (input[idx] == 'n') {
-					// ÖµÊÇ null
+					// å€¼æ˜¯ null
 					JSONSetNullAttr(pObject, key);
 					valIdx = idx + 3;
 				}
 				else if (input[idx] == 't' || input[idx] == 'f') {
-					// ÖµÊÇ boolean
+					// å€¼æ˜¯ boolean
 					if (input[idx] == 't') {
 						JSONSetBooleanAttr(pObject, key, BTRUE);
 						valIdx = idx + 3;
@@ -2071,9 +2103,13 @@ pJsonObjectNode JSONParseObject(char* input /* in */) {
 					}
 				}
 				else if ((input[idx] >= '0' && input[idx] <= '9') || input[idx] == '-') {
-					// ÖµÊÇ number
+					// å€¼æ˜¯ number æˆ– long long
 					valIdx = idx + 1;
+					int not_long = 0;
 					while (valIdx <= len - 2) {
+						if(input[valIdx] == '.' || input[valIdx] == '-'){
+							not_long = 1;
+						}
 						if (input[valIdx] == ',') {
 							break;
 						}
@@ -2082,10 +2118,16 @@ pJsonObjectNode JSONParseObject(char* input /* in */) {
 					valIdx--;
 					double num = 0;
 					sscanf(input + idx, "%lf", &num);
-					JSONSetNumberAttr(pObject, key, num);
+					if(num > 2100000000 && !not_long){
+						UINT64 lNum = 0;
+						sscanf(input + idx, "%llu", &lNum);
+						JSONSetLongNumberAttr(pObject, key, lNum);
+					}else {
+						JSONSetNumberAttr(pObject, key, num);
+					}
 				}
 				else if (input[idx] == '[') {
-					// ÖµÊÇ array
+					// å€¼æ˜¯ array
 					valIdx = idx + 1;
 					int markCount = 1;
 					int quotCount = 0;
@@ -2120,7 +2162,7 @@ pJsonObjectNode JSONParseObject(char* input /* in */) {
 					}
 				}
 				else if (input[idx] == '{') {
-					// ÖµÊÇ object
+					// å€¼æ˜¯ object
 					valIdx = idx + 1;
 					int markCount = 1;
 					int quotCount = 0;
@@ -2155,7 +2197,7 @@ pJsonObjectNode JSONParseObject(char* input /* in */) {
 					}
 				}
 				else {
-					// ÆäËûÇé¿ö£¬ÊÍ·Å¼ü
+					// å…¶ä»–æƒ…å†µï¼Œé‡Šæ”¾é”®
 					free(key);
 					break;
 				}
@@ -2171,8 +2213,8 @@ pJsonObjectNode JSONParseObject(char* input /* in */) {
 }
 
 /*
-* json ¸ñÊ½»¯º¯Êı£¬½« json ×Ö·û´®×ª»»³É json ¶ÔÏó
-* @param	input		json ×Ö·û´®
+* json æ ¼å¼åŒ–å‡½æ•°ï¼Œå°† json å­—ç¬¦ä¸²è½¬æ¢æˆ json å¯¹è±¡
+* @param	input		json å­—ç¬¦ä¸²
 * @return	pJsonObjectNode
 */
 pJsonObjectNode JSONParse(char* input /* in */) {
@@ -2197,9 +2239,9 @@ pJsonObjectNode JSONParse(char* input /* in */) {
 }
 
 /*
-* json ĞòÁĞ»¯£¬½« json ¶ÔÏó×ª»»³É json ×Ö·û´®
-* @param	pNode pJsonNode			json ½Úµã
-* @param	output	char**			½ÓÊÕ×Ö·û´®µÄÖ¸Õë
+* json åºåˆ—åŒ–ï¼Œå°† json å¯¹è±¡è½¬æ¢æˆ json å­—ç¬¦ä¸²
+* @param	pNode pJsonNode			json èŠ‚ç‚¹
+* @param	output	char**			æ¥æ”¶å­—ç¬¦ä¸²çš„æŒ‡é’ˆ
 * @return	void
 */
 void JSONStringify(pJsonNode pNode /* in */, char** output /* out */) {
@@ -2209,6 +2251,9 @@ void JSONStringify(pJsonNode pNode /* in */, char** output /* out */) {
 		}
 		if (pNode->type == JSONTYPENUMBER) {
 			*output = JSONStringifyNumberNode((pJsonNumberNode)pNode, BFALSE);
+		}
+		else if (pNode->type == JSONTYPELONGNUMBER) {
+			*output = JSONStringifyLongNumberNode((pJsonLongNumberNode)pNode, BFALSE);
 		}
 		else if (pNode->type == JSONTYPESTRING) {
 			*output = JSONStringifyStringNode((pJsonStringNode)pNode, BFALSE);
@@ -2229,10 +2274,10 @@ void JSONStringify(pJsonNode pNode /* in */, char** output /* out */) {
 }
 
 /*
-* Êı×Ö½ÚµãĞòÁĞ»¯£¬×öÊı×éÔªËØ£¬²»ĞèÒª¼üÃû³Æ
-* @param	pNode	pJsonNumberNode Êı×Ö½Úµã
-* @param	isContainsKey	BOOLEAN	ÊÇ·ñ°üº¬¼ü
-* @return	char*	ĞòÁĞ»¯×Ö·û´®
+* æ•°å­—èŠ‚ç‚¹åºåˆ—åŒ–ï¼Œåšæ•°ç»„å…ƒç´ ï¼Œä¸éœ€è¦é”®åç§°
+* @param	pNode	pJsonNumberNode æ•°å­—èŠ‚ç‚¹
+* @param	isContainsKey	BOOLEAN	æ˜¯å¦åŒ…å«é”®
+* @return	char*	åºåˆ—åŒ–å­—ç¬¦ä¸²
 */
 char* JSONStringifyNumberNode(pJsonNumberNode pNode, BOOLEAN isContainsKey) {
 	char* pStr = NULL;
@@ -2250,7 +2295,7 @@ char* JSONStringifyNumberNode(pJsonNumberNode pNode, BOOLEAN isContainsKey) {
 			sprintf(buf, "%d", num);
 		}
 		else {
-			sprintf(buf, "%f", pNode->value);
+			sprintf(buf, "%0.3f", pNode->value);
 			for (int i = strlen(buf); i > 0; i--) {
 				if (buf[i] == 0 || (buf[i] & 0xFF) == '0') {
 					buf[i] = 0;
@@ -2293,10 +2338,61 @@ char* JSONStringifyNumberNode(pJsonNumberNode pNode, BOOLEAN isContainsKey) {
 }
 
 /*
-* ×Ö·û´®½ÚµãĞòÁĞ»¯£¬×öÊı×éÔªËØ£¬²»ĞèÒª¼üÃû³Æ
-* @param	pNode	pJsonStringNode ×Ö·û´®½Úµã
-* @param	isContainsKey	BOOLEAN	ÊÇ·ñ°üº¬¼ü
-* @return	char*	ĞòÁĞ»¯×Ö·û´®
+* æ•°å­—èŠ‚ç‚¹åºåˆ—åŒ–ï¼Œåšæ•°ç»„å…ƒç´ ï¼Œä¸éœ€è¦é”®åç§°
+* @param	pNode	pJsonLongNumberNode æ•°å­—èŠ‚ç‚¹
+* @param	isContainsKey	BOOLEAN	æ˜¯å¦åŒ…å«é”®
+* @return	char*	åºåˆ—åŒ–å­—ç¬¦ä¸²
+*/
+char* JSONStringifyLongNumberNode(pJsonLongNumberNode pNode, BOOLEAN isContainsKey) {
+	char* pStr = NULL;
+	char buf[64] = { 0 };
+	long long int num = 0;
+	do {
+		if (!pNode) {
+			break;
+		}
+		if (pNode->node.type != JSONTYPELONGNUMBER) {
+			break;
+		}
+		num = (long long int)pNode->value;
+		if (num == pNode->value) {
+			sprintf(buf, "%lld", num);
+		}
+		
+		if (isContainsKey) {
+			if (pNode->node.keyName && strlen(pNode->node.keyName)) {
+				pStr = (char*)malloc(strlen(pNode->node.keyName) + strlen(buf) + 4);
+				if (!pStr) {
+					break;
+				}
+				memset(pStr, 0, strlen(pNode->node.keyName) + strlen(buf) + 4);
+				sprintf(pStr, "\"%s\":", pNode->node.keyName);
+			}
+			else {
+				pStr = (char*)malloc(strlen(buf) + 1);
+				if (!pStr) {
+					break;
+				}
+				memset(pStr, 0, strlen(buf) + 1);
+			}
+		}
+		else {
+			pStr = (char*)malloc(strlen(buf) + 1);
+			if (!pStr) {
+				break;
+			}
+			memset(pStr, 0, strlen(buf) + 1);
+		}
+		strcat(pStr, buf);
+	} while (0);
+	return pStr;
+}
+
+/*
+* å­—ç¬¦ä¸²èŠ‚ç‚¹åºåˆ—åŒ–ï¼Œåšæ•°ç»„å…ƒç´ ï¼Œä¸éœ€è¦é”®åç§°
+* @param	pNode	pJsonStringNode å­—ç¬¦ä¸²èŠ‚ç‚¹
+* @param	isContainsKey	BOOLEAN	æ˜¯å¦åŒ…å«é”®
+* @return	char*	åºåˆ—åŒ–å­—ç¬¦ä¸²
 */
 char* JSONStringifyStringNode(pJsonStringNode pNode, BOOLEAN isContainsKey) {
 	char* pStr = NULL;
@@ -2374,10 +2470,10 @@ char* JSONStringifyStringNode(pJsonStringNode pNode, BOOLEAN isContainsKey) {
 }
 
 /*
-* Êı×é½ÚµãĞòÁĞ»¯£¬×öÊı×éÔªËØ£¬²»ĞèÒª¼üÃû³Æ
-* @param	pNode	pJsonArrayNode Êı×é½Úµã
-* @param	isContainsKey	BOOLEAN	ÊÇ·ñ°üº¬¼ü
-* @return	char*	ĞòÁĞ»¯×Ö·û´®
+* æ•°ç»„èŠ‚ç‚¹åºåˆ—åŒ–ï¼Œåšæ•°ç»„å…ƒç´ ï¼Œä¸éœ€è¦é”®åç§°
+* @param	pNode	pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	isContainsKey	BOOLEAN	æ˜¯å¦åŒ…å«é”®
+* @return	char*	åºåˆ—åŒ–å­—ç¬¦ä¸²
 */
 char* JSONStringifyArrayNode(pJsonArrayNode pNode, BOOLEAN isContainsKey) {
 	char* pStr = NULL;
@@ -2391,9 +2487,9 @@ char* JSONStringifyArrayNode(pJsonArrayNode pNode, BOOLEAN isContainsKey) {
 		}
 		if (isContainsKey) {
 			if (pNode->node.keyName && strlen(pNode->node.keyName)) {
-				int len = strlen(pNode->node.keyName) + 5;	// ĞèÒª´æ·ÅÒıºÅÃ°ºÅµÈ
+				int len = strlen(pNode->node.keyName) + 5;	// éœ€è¦å­˜æ”¾å¼•å·å†’å·ç­‰
 				if (len > TMP_BUF_SIZE) {
-					// Ãû³Æ³¤¶È¹ı´ó£¬ĞèÒª¿ª±ÙÄÚ´æÀ´´æ·Å
+					// åç§°é•¿åº¦è¿‡å¤§ï¼Œéœ€è¦å¼€è¾Ÿå†…å­˜æ¥å­˜æ”¾
 					pStr = (char*)malloc(len);
 					if (!pStr) {
 						break;
@@ -2412,7 +2508,7 @@ char* JSONStringifyArrayNode(pJsonArrayNode pNode, BOOLEAN isContainsKey) {
 		else {
 			sprintf(tmpBuf, "[");
 		}
-		// ½øĞĞĞòÁĞ»¯Êı×éÔªËØ
+		// è¿›è¡Œåºåˆ—åŒ–æ•°ç»„å…ƒç´ 
 		if (pNode->size && pNode->array) {
 			for (int i = 0; i < pNode->size; i++) {
 				pJsonNode pCur = pNode->array[i];
@@ -2421,6 +2517,9 @@ char* JSONStringifyArrayNode(pJsonArrayNode pNode, BOOLEAN isContainsKey) {
 					int tmpLen = 0;
 					if (pCur->type == JSONTYPENUMBER) {
 						pTmpStringify = JSONStringifyNumberNode((pJsonNumberNode)pCur, BFALSE);
+					}
+					else if (pCur->type == JSONTYPELONGNUMBER) {
+						pTmpStringify = JSONStringifyLongNumberNode((pJsonLongNumberNode)pCur, BFALSE);
 					}
 					else if (pCur->type == JSONTYPESTRING) {
 						pTmpStringify = JSONStringifyStringNode((pJsonStringNode)pCur, BFALSE);
@@ -2441,8 +2540,8 @@ char* JSONStringifyArrayNode(pJsonArrayNode pNode, BOOLEAN isContainsKey) {
 						tmpLen = strlen(pTmpStringify);
 						tmpLen += strlen(tmpBuf) + 1;
 						if (tmpLen >= TMP_BUF_SIZE) {
-							// ½«ĞòÁĞÊı¾İ·ÅÈë½á¹ûÇø£¬²¢°ÑÁÙÊ±»º³åÇøÇå¿Õ
-							// ÖØĞÂ·ÖÅäÄÚ´æ´æ·ÅÊı¾İ
+							// å°†åºåˆ—æ•°æ®æ”¾å…¥ç»“æœåŒºï¼Œå¹¶æŠŠä¸´æ—¶ç¼“å†²åŒºæ¸…ç©º
+							// é‡æ–°åˆ†é…å†…å­˜å­˜æ”¾æ•°æ®
 							char* _pTmp = pStr;
 							int _tmpLen = 0;
 							if (_pTmp) {
@@ -2466,7 +2565,7 @@ char* JSONStringifyArrayNode(pJsonArrayNode pNode, BOOLEAN isContainsKey) {
 							memset(tmpBuf, 0, TMP_BUF_SIZE);
 						}
 						else {
-							// ½«Êı¾İ´æÈë»º³åÇø
+							// å°†æ•°æ®å­˜å…¥ç¼“å†²åŒº
 							strcat(tmpBuf, pTmpStringify);
 							strcat(tmpBuf, ",");
 						}
@@ -2476,7 +2575,7 @@ char* JSONStringifyArrayNode(pJsonArrayNode pNode, BOOLEAN isContainsKey) {
 				}
 			}
 		}
-		// ×·¼Ó½áÎ²
+		// è¿½åŠ ç»“å°¾
 		if (strlen(tmpBuf)) {
 			char* p = pStr;
 			int tLen = 0;
@@ -2533,10 +2632,10 @@ char* JSONStringifyArrayNode(pJsonArrayNode pNode, BOOLEAN isContainsKey) {
 }
 
 /*
-* ¶ÔÏó½ÚµãĞòÁĞ»¯£¬×öÊı×éÔªËØ£¬²»ĞèÒª¼üÃû³Æ
-* @param	pNode	pJsonObjectNode ¶ÔÏó½Úµã
-* @param	isContainsKey	BOOLEAN	ÊÇ·ñ°üº¬¼ü
-* @return	char*	ĞòÁĞ»¯×Ö·û´®
+* å¯¹è±¡èŠ‚ç‚¹åºåˆ—åŒ–ï¼Œåšæ•°ç»„å…ƒç´ ï¼Œä¸éœ€è¦é”®åç§°
+* @param	pNode	pJsonObjectNode å¯¹è±¡èŠ‚ç‚¹
+* @param	isContainsKey	BOOLEAN	æ˜¯å¦åŒ…å«é”®
+* @return	char*	åºåˆ—åŒ–å­—ç¬¦ä¸²
 */
 char* JSONStringifyObjectNode(pJsonObjectNode pNode, BOOLEAN isContainsKey) {
 	char* pStr = NULL;
@@ -2550,9 +2649,9 @@ char* JSONStringifyObjectNode(pJsonObjectNode pNode, BOOLEAN isContainsKey) {
 		}
 		if (isContainsKey) {
 			if (pNode->node.keyName && strlen(pNode->node.keyName)) {
-				int len = strlen(pNode->node.keyName) + 5;	// ĞèÒª´æ·ÅÒıºÅÃ°ºÅµÈ
+				int len = strlen(pNode->node.keyName) + 5;	// éœ€è¦å­˜æ”¾å¼•å·å†’å·ç­‰
 				if (len > TMP_BUF_SIZE) {
-					// Ãû³Æ³¤¶È¹ı´ó£¬ĞèÒª¿ª±ÙÄÚ´æÀ´´æ·Å
+					// åç§°é•¿åº¦è¿‡å¤§ï¼Œéœ€è¦å¼€è¾Ÿå†…å­˜æ¥å­˜æ”¾
 					pStr = (char*)malloc(len);
 					if (!pStr) {
 						break;
@@ -2571,7 +2670,7 @@ char* JSONStringifyObjectNode(pJsonObjectNode pNode, BOOLEAN isContainsKey) {
 		else {
 			sprintf(tmpBuf, "{");
 		}
-		// ½øĞĞĞòÁĞ»¯ÊôĞÔ½Úµã
+		// è¿›è¡Œåºåˆ—åŒ–å±æ€§èŠ‚ç‚¹
 		for (int i = 0; i < HASH_MAX; i++) {
 			if (pNode->table[i]) {
 				pJsonNode pCur = pNode->table[i];
@@ -2580,6 +2679,9 @@ char* JSONStringifyObjectNode(pJsonObjectNode pNode, BOOLEAN isContainsKey) {
 					int tmpLen = 0;
 					if (pCur->type == JSONTYPENUMBER) {
 						pTmpStringify = JSONStringifyNumberNode((pJsonNumberNode)pCur, BTRUE);
+					}
+					else if (pCur->type == JSONTYPELONGNUMBER) {
+						pTmpStringify = JSONStringifyLongNumberNode((pJsonLongNumberNode)pCur, BTRUE);
 					}
 					else if (pCur->type == JSONTYPESTRING) {
 						pTmpStringify = JSONStringifyStringNode((pJsonStringNode)pCur, BTRUE);
@@ -2600,8 +2702,8 @@ char* JSONStringifyObjectNode(pJsonObjectNode pNode, BOOLEAN isContainsKey) {
 						tmpLen = strlen(pTmpStringify);
 						tmpLen += strlen(tmpBuf) + 1;
 						if (tmpLen >= TMP_BUF_SIZE) {
-							// ½«ĞòÁĞÊı¾İ·ÅÈë½á¹ûÇø£¬²¢°ÑÁÙÊ±»º³åÇøÇå¿Õ
-							// ÖØĞÂ·ÖÅäÄÚ´æ´æ·ÅÊı¾İ
+							// å°†åºåˆ—æ•°æ®æ”¾å…¥ç»“æœåŒºï¼Œå¹¶æŠŠä¸´æ—¶ç¼“å†²åŒºæ¸…ç©º
+							// é‡æ–°åˆ†é…å†…å­˜å­˜æ”¾æ•°æ®
 							char* _pTmp = pStr;
 							int _tmpLen = 0;
 							if (_pTmp) {
@@ -2625,7 +2727,7 @@ char* JSONStringifyObjectNode(pJsonObjectNode pNode, BOOLEAN isContainsKey) {
 							memset(tmpBuf, 0, TMP_BUF_SIZE);
 						}
 						else {
-							// ½«Êı¾İ´æÈë»º³åÇø
+							// å°†æ•°æ®å­˜å…¥ç¼“å†²åŒº
 							strcat(tmpBuf, pTmpStringify);
 							strcat(tmpBuf, ",");
 						}
@@ -2636,7 +2738,7 @@ char* JSONStringifyObjectNode(pJsonObjectNode pNode, BOOLEAN isContainsKey) {
 				}
 			}
 		}
-		// ×·¼Ó½áÎ²
+		// è¿½åŠ ç»“å°¾
 		if (strlen(tmpBuf)) {
 			char* p = pStr;
 			int tLen = 0;
@@ -2693,10 +2795,10 @@ char* JSONStringifyObjectNode(pJsonObjectNode pNode, BOOLEAN isContainsKey) {
 }
 
 /*
-* null ½ÚµãĞòÁĞ»¯£¬×öÊı×éÔªËØ£¬²»ĞèÒª¼üÃû³Æ
-* @param	pNode	pJsonNullNode null½Úµã
-* @param	isContainsKey	BOOLEAN	ÊÇ·ñ°üº¬¼ü
-* @return	char*	ĞòÁĞ»¯×Ö·û´®
+* null èŠ‚ç‚¹åºåˆ—åŒ–ï¼Œåšæ•°ç»„å…ƒç´ ï¼Œä¸éœ€è¦é”®åç§°
+* @param	pNode	pJsonNullNode nullèŠ‚ç‚¹
+* @param	isContainsKey	BOOLEAN	æ˜¯å¦åŒ…å«é”®
+* @return	char*	åºåˆ—åŒ–å­—ç¬¦ä¸²
 */
 char* JSONStringifyNullNode(pJsonNullNode pNode, BOOLEAN isContainsKey) {
 	char* pStr = NULL;
@@ -2738,10 +2840,10 @@ char* JSONStringifyNullNode(pJsonNullNode pNode, BOOLEAN isContainsKey) {
 }
 
 /*
-* Boolean ½ÚµãĞòÁĞ»¯£¬×öÊı×éÔªËØ£¬²»ĞèÒª¼üÃû³Æ
-* @param	pNode	pJsonBooleanNode Boolean½Úµã
-* @param	isContainsKey	BOOLEAN	ÊÇ·ñ°üº¬¼ü
-* @return	char*	ĞòÁĞ»¯×Ö·û´®
+* Boolean èŠ‚ç‚¹åºåˆ—åŒ–ï¼Œåšæ•°ç»„å…ƒç´ ï¼Œä¸éœ€è¦é”®åç§°
+* @param	pNode	pJsonBooleanNode BooleanèŠ‚ç‚¹
+* @param	isContainsKey	BOOLEAN	æ˜¯å¦åŒ…å«é”®
+* @return	char*	åºåˆ—åŒ–å­—ç¬¦ä¸²
 */
 char* JSONStringifyBooleanNode(pJsonBooleanNode pNode, BOOLEAN isContainsKey) {
 	char* pStr = NULL;
@@ -2789,10 +2891,10 @@ char* JSONStringifyBooleanNode(pJsonBooleanNode pNode, BOOLEAN isContainsKey) {
 }
 
 /*
-* ÅĞ¶Ï json ÊÇ·ñ°üº¬ÊôĞÔ
-* @param	pObject		json ¶ÔÏó
-* @param	key			ÊôĞÔÃû³Æ
-* @return	BOOLEAN		ÊÇ·ñ°üº¬ÊôĞÔ
+* åˆ¤æ–­ json æ˜¯å¦åŒ…å«å±æ€§
+* @param	pObject		json å¯¹è±¡
+* @param	key			å±æ€§åç§°
+* @return	BOOLEAN		æ˜¯å¦åŒ…å«å±æ€§
 */
 BOOLEAN JSONIsContainsAttr(pJsonObjectNode pObject /* in */, char* key /* in */) {
 	BOOLEAN res = BFALSE;
@@ -2811,7 +2913,7 @@ BOOLEAN JSONIsContainsAttr(pJsonObjectNode pObject /* in */, char* key /* in */)
 			break;
 		}
 		if (pObject->table[idx]) {
-			// ½øĞĞÁ´Ê½±éÀú
+			// è¿›è¡Œé“¾å¼éå†
 			pJsonNode pNode = pObject->table[idx];
 			do {
 				if (strcmp(key, pNode->keyName) == 0) {
@@ -2826,10 +2928,10 @@ BOOLEAN JSONIsContainsAttr(pJsonObjectNode pObject /* in */, char* key /* in */)
 }
 
 /*
-* Ïò json ¶ÔÏóÖĞÌí¼Ó NumberÀàĞÍ ¼üÖµ¶ÔÏó
-* @param	pObject		json ¶ÔÏó
-* @param	key			ÊôĞÔÃû³Æ
-* @param	value		ÊôĞÔÖµ
+* å‘ json å¯¹è±¡ä¸­æ·»åŠ  Numberç±»å‹ é”®å€¼å¯¹è±¡
+* @param	pObject		json å¯¹è±¡
+* @param	key			å±æ€§åç§°
+* @param	value		å±æ€§å€¼
 */
 void JSONSetNumberAttr(pJsonObjectNode pObject /* in */, char* key /* in */, double value /* in */) {
 	int idx = -1;
@@ -2850,7 +2952,7 @@ void JSONSetNumberAttr(pJsonObjectNode pObject /* in */, char* key /* in */, dou
 		if (!pObject->table[idx]) {
 			pJsonNumberNode pNode = JSONCreateNumberNode(key, value);
 			if (!pNode) {
-				// Number½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+				// NumberèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 				break;
 			}
 			pObject->table[idx] = (pJsonNode)pNode;
@@ -2864,6 +2966,9 @@ void JSONSetNumberAttr(pJsonObjectNode pObject /* in */, char* key /* in */, dou
 					if (pCur->type == JSONTYPENUMBER) {
 						((pJsonNumberNode)pCur)->value = value;
 						break;
+					}
+					else if (pCur->type == JSONTYPELONGNUMBER) {
+						JSONDestroyLongNumberNode((pJsonLongNumberNode)pCur);
 					}
 					else if (pCur->type == JSONTYPESTRING) {
 						JSONDestroyStringNode((pJsonStringNode)pCur);
@@ -2885,7 +2990,7 @@ void JSONSetNumberAttr(pJsonObjectNode pObject /* in */, char* key /* in */, dou
 					}
 					pJsonNumberNode pNode = JSONCreateNumberNode(key, value);
 					if (!pNode) {
-						// Number½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+						// NumberèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 						break;
 					}
 					pNode->node.next = pNext;
@@ -2900,7 +3005,7 @@ void JSONSetNumberAttr(pJsonObjectNode pObject /* in */, char* key /* in */, dou
 				if (pCur && !pCur->next) {
 					pJsonNumberNode pNode = JSONCreateNumberNode(key, value);
 					if (!pNode) {
-						// Number½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+						// NumberèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 						break;
 					}
 					pNode->node.next = pNext;
@@ -2916,10 +3021,104 @@ void JSONSetNumberAttr(pJsonObjectNode pObject /* in */, char* key /* in */, dou
 }
 
 /*
-* Ïò json ¶ÔÏóÖĞÌí¼Ó StringÀàĞÍ ¼üÖµ¶ÔÏó
-* @param	pObject		json ¶ÔÏó
-* @param	key			ÊôĞÔÃû³Æ
-* @param	value		ÊôĞÔÖµ
+ * å‘ json å¯¹è±¡ä¸­æ·»åŠ  Long Numberç±»å‹ é”®å€¼å¯¹è±¡
+ * @param	pObject		json å¯¹è±¡
+ * @param	key			å±æ€§åç§°
+ * @param	value		å±æ€§å€¼
+ * @return	void
+*/
+void JSONSetLongNumberAttr(pJsonObjectNode pObject /* in */, char* key /* in */, UINT64 value /* in */){
+	int idx = -1;
+	do {
+		if (!pObject) {
+			break;
+		}
+		if (pObject->node.type != JSONTYPEOBJECT) {
+			break;
+		}
+		if (!key) {
+			break;
+		}
+		idx = JSONGetHashIndex(key);
+		if (idx == -1) {
+			break;
+		}
+		if (!pObject->table[idx]) {
+			pJsonLongNumberNode pNode = JSONCreateLongNumberNode(key, value);
+			if (!pNode) {
+				// NumberèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
+				break;
+			}
+			pObject->table[idx] = (pJsonNode)pNode;
+		}
+		else {
+			pJsonNode pPre = NULL;
+			pJsonNode pCur = pObject->table[idx];
+			pJsonNode pNext = pObject->table[idx]->next;
+			do {
+				if (strcmp(key, pCur->keyName) == 0) {
+					if (pCur->type == JSONTYPELONGNUMBER) {
+						((pJsonLongNumberNode)pCur)->value = value;
+						break;
+					}
+					else if (pCur->type == JSONTYPENUMBER) {
+						JSONDestroyNumberNode((pJsonNumberNode)pCur);
+					}
+					else if (pCur->type == JSONTYPESTRING) {
+						JSONDestroyStringNode((pJsonStringNode)pCur);
+					}
+					else if (pCur->type == JSONTYPEARRAY) {
+						JSONDestroyArrayNode((pJsonArrayNode)pCur);
+					}
+					else if (pCur->type == JSONTYPEOBJECT) {
+						JSONDestroyObjectNode((pJsonObjectNode)pCur);
+					}
+					else if (pCur->type == JSONTYPENULL) {
+						JSONDestroyNullNode((pJsonNullNode)pCur);
+					}
+					else if (pCur->type == JSONTYPEBOOLEAN) {
+						JSONDestroyBooleanNode((pJsonBooleanNode)pCur);
+					}
+					else {
+						break;
+					}
+					pJsonLongNumberNode pNode = JSONCreateLongNumberNode(key, value);
+					if (!pNode) {
+						// NumberèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
+						break;
+					}
+					pNode->node.next = pNext;
+					if (!pPre) {
+						pObject->table[idx] = (pJsonNode)pNode;
+					}
+					else {
+						pPre->next = (pJsonNode)pNode;
+					}
+					break;
+				}
+				if (pCur && !pCur->next) {
+					pJsonLongNumberNode pNode = JSONCreateLongNumberNode(key, value);
+					if (!pNode) {
+						// NumberèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
+						break;
+					}
+					pNode->node.next = pNext;
+					pCur->next = (pJsonNode)pNode;
+					break;
+				}
+				pPre = pCur;
+				pCur = pNext;
+				pNext = pNext->next;
+			} while (pCur);
+		}
+	} while (0);
+}
+
+/*
+* å‘ json å¯¹è±¡ä¸­æ·»åŠ  Stringç±»å‹ é”®å€¼å¯¹è±¡
+* @param	pObject		json å¯¹è±¡
+* @param	key			å±æ€§åç§°
+* @param	value		å±æ€§å€¼
 */
 void JSONSetStringAttr(pJsonObjectNode pObject /* in */, char* key /* in */, char* value /* in */) {
 	int idx = -1;
@@ -2943,7 +3142,7 @@ void JSONSetStringAttr(pJsonObjectNode pObject /* in */, char* key /* in */, cha
 		if (!pObject->table[idx]) {
 			pJsonStringNode pNode = JSONCreateStringNode(key, value);
 			if (!pNode) {
-				// String½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+				// StringèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 				break;
 			}
 			pObject->table[idx] = (pJsonNode)pNode;
@@ -2957,13 +3156,16 @@ void JSONSetStringAttr(pJsonObjectNode pObject /* in */, char* key /* in */, cha
 					if (pCur->type == JSONTYPENUMBER) {
 						JSONDestroyNumberNode((pJsonNumberNode)pCur);
 					}
+					else if (pCur->type == JSONTYPELONGNUMBER) {
+						JSONDestroyLongNumberNode((pJsonLongNumberNode)pCur);
+					}
 					else if (pCur->type == JSONTYPESTRING) {
 						if (((pJsonStringNode)pCur)->value) {
 							free(((pJsonStringNode)pCur)->value);
 						}
 						((pJsonStringNode)pCur)->value = deepCloneString(value);
 						if (!((pJsonStringNode)pCur)->value) {
-							// String½ÚµãÖµÄÚ´æ·ÖÅäÊ§°Ü
+							// StringèŠ‚ç‚¹å€¼å†…å­˜åˆ†é…å¤±è´¥
 							break;
 						}
 						break;
@@ -2985,7 +3187,7 @@ void JSONSetStringAttr(pJsonObjectNode pObject /* in */, char* key /* in */, cha
 					}
 					pJsonStringNode pNode = JSONCreateStringNode(key, value);
 					if (!pNode) {
-						// String½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+						// StringèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 						break;
 					}
 					pNode->node.next = pNext;
@@ -3000,7 +3202,7 @@ void JSONSetStringAttr(pJsonObjectNode pObject /* in */, char* key /* in */, cha
 				if (pCur && !pCur->next) {
 					pJsonStringNode pNode = JSONCreateStringNode(key, value);
 					if (!pNode) {
-						// String½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+						// StringèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 						break;
 					}
 					pNode->node.next = pNext;
@@ -3016,9 +3218,9 @@ void JSONSetStringAttr(pJsonObjectNode pObject /* in */, char* key /* in */, cha
 }
 
 /*
-* Ïò json ¶ÔÏóÖĞÌí¼Ó ArrayÀàĞÍ ¼üÖµ¶ÔÏó£¬Ìí¼ÓµÄÊı×éÎª¿ÕÊı×é
-* @param	pObject		json ¶ÔÏó
-* @param	key			ÊôĞÔÃû³Æ
+* å‘ json å¯¹è±¡ä¸­æ·»åŠ  Arrayç±»å‹ é”®å€¼å¯¹è±¡ï¼Œæ·»åŠ çš„æ•°ç»„ä¸ºç©ºæ•°ç»„
+* @param	pObject		json å¯¹è±¡
+* @param	key			å±æ€§åç§°
 */
 void JSONSetEmptyArrayAttr(pJsonObjectNode pObject /* in */, char* key /* in */) {
 	int idx = -1;
@@ -3039,7 +3241,7 @@ void JSONSetEmptyArrayAttr(pJsonObjectNode pObject /* in */, char* key /* in */)
 		if (!pObject->table[idx]) {
 			pJsonArrayNode pNode = JSONCreateArrayNode(key);
 			if (!pNode) {
-				// Array½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+				// ArrayèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 				break;
 			}
 			pObject->table[idx] = (pJsonNode)pNode;
@@ -3052,6 +3254,9 @@ void JSONSetEmptyArrayAttr(pJsonObjectNode pObject /* in */, char* key /* in */)
 				if (strcmp(key, pCur->keyName) == 0) {
 					if (pCur->type == JSONTYPENUMBER) {
 						JSONDestroyNumberNode((pJsonNumberNode)pCur);
+					}
+					else if (pCur->type == JSONTYPELONGNUMBER) {
+						JSONDestroyLongNumberNode((pJsonLongNumberNode)pCur);
 					}
 					else if (pCur->type == JSONTYPESTRING) {
 						JSONDestroyStringNode((pJsonStringNode)pCur);
@@ -3073,7 +3278,7 @@ void JSONSetEmptyArrayAttr(pJsonObjectNode pObject /* in */, char* key /* in */)
 					}
 					pJsonArrayNode pNode = JSONCreateArrayNode(key);
 					if (!pNode) {
-						// Array½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+						// ArrayèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 						break;
 					}
 					pNode->node.next = pNext;
@@ -3088,7 +3293,7 @@ void JSONSetEmptyArrayAttr(pJsonObjectNode pObject /* in */, char* key /* in */)
 				if (pCur && !pCur->next) {
 					pJsonArrayNode pNode = JSONCreateArrayNode(key);
 					if (!pNode) {
-						// Array½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+						// ArrayèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 						break;
 					}
 					pNode->node.next = pNext;
@@ -3104,11 +3309,11 @@ void JSONSetEmptyArrayAttr(pJsonObjectNode pObject /* in */, char* key /* in */)
 }
 
 /*
-* Ïò json ¶ÔÏóÖĞÌí¼Ó ArrayÀàĞÍ ¼üÖµ¶ÔÏó
-* @param	pObject		json ¶ÔÏó
-* @param	key			ÊôĞÔÃû³Æ
-* @param	value		pJsonArrayNode	Êı×é½Úµã
-* @param	isDeepClone	BOOLEAN ÊÇ·ñ½øĞĞÉî¶È¿½±´
+* å‘ json å¯¹è±¡ä¸­æ·»åŠ  Arrayç±»å‹ é”®å€¼å¯¹è±¡
+* @param	pObject		json å¯¹è±¡
+* @param	key			å±æ€§åç§°
+* @param	value		pJsonArrayNode	æ•°ç»„èŠ‚ç‚¹
+* @param	isDeepClone	BOOLEAN æ˜¯å¦è¿›è¡Œæ·±åº¦æ‹·è´
 * @return	void
 */
 void JSONSetArrayAttr(pJsonObjectNode pObject /* in */, char* key /* in */, pJsonArrayNode pArray, BOOLEAN isDeepClone) {
@@ -3142,10 +3347,10 @@ void JSONSetArrayAttr(pJsonObjectNode pObject /* in */, char* key /* in */, pJso
 				pNode = pArray;
 			}
 			if (!pNode) {
-				// Array½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+				// ArrayèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 				break;
 			}
-			// ÖØĞÂ¶ÔÊı×é½øĞĞÃû³Æ¸³Öµ
+			// é‡æ–°å¯¹æ•°ç»„è¿›è¡Œåç§°èµ‹å€¼
 			if (pNode->node.keyName) {
 				free(pNode->node.keyName);
 			}
@@ -3164,6 +3369,9 @@ void JSONSetArrayAttr(pJsonObjectNode pObject /* in */, char* key /* in */, pJso
 				if (strcmp(key, pCur->keyName) == 0) {
 					if (pCur->type == JSONTYPENUMBER) {
 						JSONDestroyNumberNode((pJsonNumberNode)pCur);
+					}
+					else if (pCur->type == JSONTYPELONGNUMBER) {
+						JSONDestroyLongNumberNode((pJsonLongNumberNode)pCur);
 					}
 					else if (pCur->type == JSONTYPESTRING) {
 						JSONDestroyStringNode((pJsonStringNode)pCur);
@@ -3194,10 +3402,10 @@ void JSONSetArrayAttr(pJsonObjectNode pObject /* in */, char* key /* in */, pJso
 						pNode = pArray;
 					}
 					if (!pNode) {
-						// Array½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+						// ArrayèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 						break;
 					}
-					// ÖØĞÂ¶ÔÊı×é½øĞĞÃû³Æ¸³Öµ
+					// é‡æ–°å¯¹æ•°ç»„è¿›è¡Œåç§°èµ‹å€¼
 					if (pNode->node.keyName) {
 						free(pNode->node.keyName);
 					}
@@ -3224,10 +3432,10 @@ void JSONSetArrayAttr(pJsonObjectNode pObject /* in */, char* key /* in */, pJso
 						pNode = pArray;
 					}
 					if (!pNode) {
-						// Array½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+						// ArrayèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 						break;
 					}
-					// ÖØĞÂ¶ÔÊı×é½øĞĞÃû³Æ¸³Öµ
+					// é‡æ–°å¯¹æ•°ç»„è¿›è¡Œåç§°èµ‹å€¼
 					if (pNode->node.keyName) {
 						free(pNode->node.keyName);
 					}
@@ -3249,11 +3457,11 @@ void JSONSetArrayAttr(pJsonObjectNode pObject /* in */, char* key /* in */, pJso
 }
 
 /*
-* Ïò json ¶ÔÏóÖĞÌí¼Ó ObjectÀàĞÍ ¼üÖµ¶ÔÏó
-* @param	pObject		json ¶ÔÏó
-* @param	key			ÊôĞÔÃû³Æ
-* @param	value		ÊôĞÔÖµ
-* @param	isDeepClone	BOOLEAN ÊÇ·ñ½øĞĞÉî¶È¿½±´
+* å‘ json å¯¹è±¡ä¸­æ·»åŠ  Objectç±»å‹ é”®å€¼å¯¹è±¡
+* @param	pObject		json å¯¹è±¡
+* @param	key			å±æ€§åç§°
+* @param	value		å±æ€§å€¼
+* @param	isDeepClone	BOOLEAN æ˜¯å¦è¿›è¡Œæ·±åº¦æ‹·è´
 * @return	void
 */
 void JSONSetObjectAttr(pJsonObjectNode pObject /* in */, char* key /* in */, pJsonObjectNode value /* in */, BOOLEAN isDeepClone) {
@@ -3268,7 +3476,7 @@ void JSONSetObjectAttr(pJsonObjectNode pObject /* in */, char* key /* in */, pJs
 		if (!key) {
 			break;
 		}
-		// ×Ô¼º²»ÄÜ×÷Îª×Ô¼ºµÄ×Ó½Úµã
+		// è‡ªå·±ä¸èƒ½ä½œä¸ºè‡ªå·±çš„å­èŠ‚ç‚¹
 		if (pObject == value) {
 			break;
 		}
@@ -3306,6 +3514,9 @@ void JSONSetObjectAttr(pJsonObjectNode pObject /* in */, char* key /* in */, pJs
 					if (pCur->type == JSONTYPENUMBER) {
 						JSONDestroyNumberNode((pJsonNumberNode)pCur);
 					}
+					else if (pCur->type == JSONTYPELONGNUMBER) {
+						JSONDestroyLongNumberNode((pJsonLongNumberNode)pCur);
+					}
 					else if (pCur->type == JSONTYPESTRING) {
 						JSONDestroyStringNode((pJsonStringNode)pCur);
 					}
@@ -3313,7 +3524,7 @@ void JSONSetObjectAttr(pJsonObjectNode pObject /* in */, char* key /* in */, pJs
 						JSONDestroyArrayNode((pJsonArrayNode)pCur);
 					}
 					else if (pCur->type == JSONTYPEOBJECT) {
-						// ½ÚµãÒÑ´æÔÚ£¬²»ĞèÒªÖØ¸´Ìí¼Ó
+						// èŠ‚ç‚¹å·²å­˜åœ¨ï¼Œä¸éœ€è¦é‡å¤æ·»åŠ 
 						if (pCur == (pJsonNode)value) {
 							break;
 						}
@@ -3336,10 +3547,10 @@ void JSONSetObjectAttr(pJsonObjectNode pObject /* in */, char* key /* in */, pJs
 						pNode = value;
 					}
 					if (!pNode) {
-						// Object½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+						// ObjectèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 						break;
 					}
-					// ÖØĞÂ¶ÔObject½øĞĞÃû³Æ¸³Öµ
+					// é‡æ–°å¯¹Objectè¿›è¡Œåç§°èµ‹å€¼
 					if (pNode->node.keyName) {
 						free(pNode->node.keyName);
 					}
@@ -3366,10 +3577,10 @@ void JSONSetObjectAttr(pJsonObjectNode pObject /* in */, char* key /* in */, pJs
 						pNode = value;
 					}
 					if (!pNode) {
-						// Object½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+						// ObjectèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 						break;
 					}
-					// ÖØĞÂ¶ÔÊı×é½øĞĞÃû³Æ¸³Öµ
+					// é‡æ–°å¯¹æ•°ç»„è¿›è¡Œåç§°èµ‹å€¼
 					if (pNode->node.keyName) {
 						free(pNode->node.keyName);
 					}
@@ -3391,9 +3602,9 @@ void JSONSetObjectAttr(pJsonObjectNode pObject /* in */, char* key /* in */, pJs
 }
 
 /*
-* Ïò json ¶ÔÏóÖĞÌí¼Ó nullÀàĞÍ ¼üÖµ¶ÔÏó
-* @param	pObject		json ¶ÔÏó
-* @param	key			ÊôĞÔÃû³Æ
+* å‘ json å¯¹è±¡ä¸­æ·»åŠ  nullç±»å‹ é”®å€¼å¯¹è±¡
+* @param	pObject		json å¯¹è±¡
+* @param	key			å±æ€§åç§°
 * @return	void
 */
 void JSONSetNullAttr(pJsonObjectNode pObject /* in */, char* key /* in */) {
@@ -3415,7 +3626,7 @@ void JSONSetNullAttr(pJsonObjectNode pObject /* in */, char* key /* in */) {
 		if (!pObject->table[idx]) {
 			pJsonNullNode pNode = JSONCreateNullNode(key);
 			if (!pNode) {
-				// Null½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+				// NullèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 				break;
 			}
 			pObject->table[idx] = (pJsonNode)pNode;
@@ -3428,6 +3639,9 @@ void JSONSetNullAttr(pJsonObjectNode pObject /* in */, char* key /* in */) {
 				if (strcmp(key, pCur->keyName) == 0) {
 					if (pCur->type == JSONTYPENUMBER) {
 						JSONDestroyNumberNode((pJsonNumberNode)pCur);
+					}
+					else if (pCur->type == JSONTYPELONGNUMBER) {
+						JSONDestroyLongNumberNode((pJsonLongNumberNode)pCur);
 					}
 					else if (pCur->type == JSONTYPESTRING) {
 						JSONDestroyStringNode((pJsonStringNode)pCur);
@@ -3449,7 +3663,7 @@ void JSONSetNullAttr(pJsonObjectNode pObject /* in */, char* key /* in */) {
 					}
 					pJsonNullNode pNode = JSONCreateNullNode(key);
 					if (!pNode) {
-						// Null½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+						// NullèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 						break;
 					}
 					pNode->node.next = pNext;
@@ -3464,7 +3678,7 @@ void JSONSetNullAttr(pJsonObjectNode pObject /* in */, char* key /* in */) {
 				if (pCur && !pCur->next) {
 					pJsonNullNode pNode = JSONCreateNullNode(key);
 					if (!pNode) {
-						// null½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+						// nullèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 						break;
 					}
 					pNode->node.next = pNext;
@@ -3480,10 +3694,10 @@ void JSONSetNullAttr(pJsonObjectNode pObject /* in */, char* key /* in */) {
 }
 
 /*
-* Ïò json ¶ÔÏóÖĞÌí¼Ó BooleanÀàĞÍ ¼üÖµ¶ÔÏó
-* @param	pObject				json ¶ÔÏó
-* @param	key char*			ÊôĞÔÃû³Æ
-* @param	value Boolean		ÊôĞÔÖµ
+* å‘ json å¯¹è±¡ä¸­æ·»åŠ  Booleanç±»å‹ é”®å€¼å¯¹è±¡
+* @param	pObject				json å¯¹è±¡
+* @param	key char*			å±æ€§åç§°
+* @param	value Boolean		å±æ€§å€¼
 * @return	void
 */
 void JSONSetBooleanAttr(pJsonObjectNode pObject /* in */, char* key /* in */, BOOLEAN value /* in */) {
@@ -3505,7 +3719,7 @@ void JSONSetBooleanAttr(pJsonObjectNode pObject /* in */, char* key /* in */, BO
 		if (!pObject->table[idx]) {
 			pJsonBooleanNode pNode = JSONCreateBooleanNode(key, value);
 			if (!pNode) {
-				// Boolean½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+				// BooleanèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 				break;
 			}
 			pObject->table[idx] = (pJsonNode)pNode;
@@ -3518,6 +3732,9 @@ void JSONSetBooleanAttr(pJsonObjectNode pObject /* in */, char* key /* in */, BO
 				if (strcmp(key, pCur->keyName) == 0) {
 					if (pCur->type == JSONTYPENUMBER) {
 						JSONDestroyNumberNode((pJsonNumberNode)pCur);
+					}
+					else if (pCur->type == JSONTYPELONGNUMBER) {
+						JSONDestroyLongNumberNode((pJsonLongNumberNode)pCur);
 					}
 					else if (pCur->type == JSONTYPESTRING) {
 						JSONDestroyStringNode((pJsonStringNode)pCur);
@@ -3540,7 +3757,7 @@ void JSONSetBooleanAttr(pJsonObjectNode pObject /* in */, char* key /* in */, BO
 					}
 					pJsonBooleanNode pNode = JSONCreateBooleanNode(key, value);
 					if (!pNode) {
-						// Number½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+						// NumberèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 						break;
 					}
 					pNode->node.next = pNext;
@@ -3555,7 +3772,7 @@ void JSONSetBooleanAttr(pJsonObjectNode pObject /* in */, char* key /* in */, BO
 				if (pCur && !pCur->next) {
 					pJsonBooleanNode pNode = JSONCreateBooleanNode(key, value);
 					if (!pNode) {
-						// Number½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+						// NumberèŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 						break;
 					}
 					pNode->node.next = pNext;
@@ -3571,9 +3788,9 @@ void JSONSetBooleanAttr(pJsonObjectNode pObject /* in */, char* key /* in */, BO
 }
 
 /*
-* ÒÆ³ı json ¶ÔÏóÖĞµÄÊôĞÔ
-* @param	pObject		json ¶ÔÏó
-* @param	key			ÊôĞÔÃû³Æ
+* ç§»é™¤ json å¯¹è±¡ä¸­çš„å±æ€§
+* @param	pObject		json å¯¹è±¡
+* @param	key			å±æ€§åç§°
 * @return	void
 */
 void JSONRemoveAttr(pJsonObjectNode pObject /* in */, char* key /* in */) {
@@ -3632,8 +3849,8 @@ void JSONRemoveAttr(pJsonObjectNode pObject /* in */, char* key /* in */) {
 }
 
 /*
-* Ïú»Ù json ½Úµã
-* @param	pObject		json ½Úµã
+* é”€æ¯ json èŠ‚ç‚¹
+* @param	pObject		json èŠ‚ç‚¹
 * @return	void
 */
 void JSONDestroy(pJsonNode pNode /* in */) {
@@ -3643,6 +3860,9 @@ void JSONDestroy(pJsonNode pNode /* in */) {
 		}
 		if (pNode->type == JSONTYPENUMBER) {
 			JSONDestroyNumberNode((pJsonNumberNode)pNode);
+		}
+		else if (pNode->type == JSONTYPELONGNUMBER) {
+			JSONDestroyLongNumberNode((pJsonLongNumberNode)pNode);
 		}
 		else if (pNode->type == JSONTYPESTRING) {
 			JSONDestroyStringNode((pJsonStringNode)pNode);
@@ -3663,9 +3883,9 @@ void JSONDestroy(pJsonNode pNode /* in */) {
 }
 
 /*
-* json ¶ÔÏóÉî¿½±´
-* @param	pObject json¶ÔÏó
-* @return	pJsonObjectNode	ĞÂ´´½¨µÄjson¶ÔÏó
+* json å¯¹è±¡æ·±æ‹·è´
+* @param	pObject jsonå¯¹è±¡
+* @return	pJsonObjectNode	æ–°åˆ›å»ºçš„jsonå¯¹è±¡
 */
 pJsonObjectNode JSONObjectDeepClone(pJsonObjectNode pObject /* in */) {
 	pJsonObjectNode pJson = NULL;
@@ -3678,20 +3898,20 @@ pJsonObjectNode JSONObjectDeepClone(pJsonObjectNode pObject /* in */) {
 		}
 		pJson = JSONCreateObjectNode(pObject->node.keyName);
 		if (!pJson) {
-			// Éî¿½±´Ê±£¬json¶ÔÏó½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+			// æ·±æ‹·è´æ—¶ï¼Œjsonå¯¹è±¡èŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 			break;
 		}
 		
-		// ¿½±´hash±í
+		// æ‹·è´hashè¡¨
 		for (int i = 0; i < HASH_MAX; i++) {
 			if (pObject->table[i]) {
-				// ĞèÒª½øĞĞÁ´Ê½¿½±´
+				// éœ€è¦è¿›è¡Œé“¾å¼æ‹·è´
 				pJsonNode pPre = NULL;
 				pJsonNode pCur = pObject->table[i];
 				pJsonNode pNext = pObject->table[i]->next;
 				int num = 0;
 				while (pCur) {
-					// ¿½±´Ê±Èç¹û¿½±´µ½¶ÔÏó£¬»òÕß×ÔÉíÔõÃ´°ì
+					// æ‹·è´æ—¶å¦‚æœæ‹·è´åˆ°å¯¹è±¡ï¼Œæˆ–è€…è‡ªèº«æ€ä¹ˆåŠ
 					if (pCur == (pJsonNode)pObject || (num != 0 && pCur == pObject->table[i])) {
 						break;
 					}
@@ -3700,27 +3920,27 @@ pJsonObjectNode JSONObjectDeepClone(pJsonObjectNode pObject /* in */) {
 					if (pCur->type == JSONTYPENUMBER) {
 						pTmpNode = (pJsonNode)JSONCreateNumberNode(pCur->keyName, ((pJsonNumberNode)pCur)->value);
 						if (!pTmpNode) {
-							// Éî¿½±´Ê±£¬json¶ÔÏóNumberÊôĞÔ½ÚµãÄÚ´æ·ÖÅäÊ§°Ü
+							// æ·±æ‹·è´æ—¶ï¼Œjsonå¯¹è±¡Numberå±æ€§èŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥
 							break;
 						}
 					}
 					else if (pCur->type == JSONTYPESTRING) {
 						pTmpNode = (pJsonNode)JSONCreateStringNode(pCur->keyName, ((pJsonStringNode)pCur)->value);
 						if (!pTmpNode) {
-							// Éî¿½±´Ê±£¬json¶ÔÏóStringÊôĞÔ½ÚµãÄÚ´æ·ÖÅäÊ§°Ü;
+							// æ·±æ‹·è´æ—¶ï¼Œjsonå¯¹è±¡Stringå±æ€§èŠ‚ç‚¹å†…å­˜åˆ†é…å¤±è´¥;
 							break;
 						}
 					}
 					else if (pCur->type == JSONTYPEARRAY) {
-						// Êı×é½Úµã
+						// æ•°ç»„èŠ‚ç‚¹
 						pTmpNode = (pJsonNode)JSONArrayDeepClone((pJsonArrayNode)pCur);
 					}
 					else if (pCur->type == JSONTYPEOBJECT) {
-						// Object¼¸µãÖ±½Óµİ¹é
+						// Objectå‡ ç‚¹ç›´æ¥é€’å½’
 						pTmpNode = (pJsonNode)JSONObjectDeepClone((pJsonObjectNode)pCur);
 					}
 					else if (pCur->type == JSONTYPENULL) {
-						// null ½Úµã
+						// null èŠ‚ç‚¹
 						pTmpNode = (pJsonNode)JSONCreateNullNode(pCur->keyName);
 					}
 					else if (pCur->type == JSONTYPEBOOLEAN) {
@@ -3735,7 +3955,7 @@ pJsonObjectNode JSONObjectDeepClone(pJsonObjectNode pObject /* in */) {
 							pPre->next = pTmpNode;
 						}
 						else {
-							// Á´±í¶ÏÁÑ£¬ÎŞ·¨¼ÌĞøÁ´½ÓÏÂÈ¥£¬ĞèÒªÖĞ¶Ïµ±Ç°Ñ­»·£¬²¢½øĞĞÊÍ·Åµ±Ç°´´½¨µÄ½Úµã
+							// é“¾è¡¨æ–­è£‚ï¼Œæ— æ³•ç»§ç»­é“¾æ¥ä¸‹å»ï¼Œéœ€è¦ä¸­æ–­å½“å‰å¾ªç¯ï¼Œå¹¶è¿›è¡Œé‡Šæ”¾å½“å‰åˆ›å»ºçš„èŠ‚ç‚¹
 							if (pTmpNode) {
 								if (pTmpNode->type == JSONTYPENUMBER) {
 									JSONDestroyNumberNode((pJsonNumberNode)pTmpNode);
@@ -3773,9 +3993,9 @@ pJsonObjectNode JSONObjectDeepClone(pJsonObjectNode pObject /* in */) {
 }
 
 /*
-* json Êı×éÉî¿½±´
-* @param	pArray jsonÊı×é
-* @return	pJsonArrayNode	ĞÂ´´½¨µÄjson Array
+* json æ•°ç»„æ·±æ‹·è´
+* @param	pArray jsonæ•°ç»„
+* @return	pJsonArrayNode	æ–°åˆ›å»ºçš„json Array
 */
 pJsonArrayNode JSONArrayDeepClone(pJsonArrayNode pArray /* in */) {
 	pJsonArrayNode pArrayNode = NULL;
@@ -3791,22 +4011,22 @@ pJsonArrayNode JSONArrayDeepClone(pJsonArrayNode pArray /* in */) {
 			break;
 		}
 		pArrayNode->size = pArray->size;
-		// ´æ·ÅÔªËØµÄÀàĞÍ
+		// å­˜æ”¾å…ƒç´ çš„ç±»å‹
 		pArrayNode->type = pArray->type;
-		// ¿½±´Êı×éÔªËØ
+		// æ‹·è´æ•°ç»„å…ƒç´ 
 		if (pArray->size && pArray->array) {
-			// ¼ÆËãÊı×é·ÖÅäÄÚ´æ¿Õ¼ä£¬Êı×é½ÚµãµÄÔªËØÊı×é¿Õ¼äÄ¬ÈÏ²»·ÖÅä£¬Ö»ÓĞÌí¼ÓÔªËØ²Å½øĞĞ·ÖÅä
-			// ½éÓÚÄÚ´æ·ÖÅä¿¼ÂÇ£¬Ã¿´Î·ÖÅä ARRAY_MIN_SIZE ´óĞ¡£¬µ±»º³åÇøÔ½½çµÄÊ±ºò£¬ÖØĞÂ·ÖÅä£¬ÒÔ½ÚÔ¼ÄÚ´æ
+			// è®¡ç®—æ•°ç»„åˆ†é…å†…å­˜ç©ºé—´ï¼Œæ•°ç»„èŠ‚ç‚¹çš„å…ƒç´ æ•°ç»„ç©ºé—´é»˜è®¤ä¸åˆ†é…ï¼Œåªæœ‰æ·»åŠ å…ƒç´ æ‰è¿›è¡Œåˆ†é…
+			// ä»‹äºå†…å­˜åˆ†é…è€ƒè™‘ï¼Œæ¯æ¬¡åˆ†é… ARRAY_MIN_SIZE å¤§å°ï¼Œå½“ç¼“å†²åŒºè¶Šç•Œçš„æ—¶å€™ï¼Œé‡æ–°åˆ†é…ï¼Œä»¥èŠ‚çº¦å†…å­˜
 			int size = (pArray->size / ARRAY_MIN_SIZE + (pArray->size % ARRAY_MIN_SIZE == 0 ? 0 : 1)) * ARRAY_MIN_SIZE;
 			pArrayNode->array = (pJsonNode*)malloc(size * sizeof(pJsonNode));
 			if (!pArrayNode->array) {
-				// Êı×é¿Õ¼ä·ÖÅäÊ§°Ü
+				// æ•°ç»„ç©ºé—´åˆ†é…å¤±è´¥
 				pArrayNode->size = 0;
 				pArrayNode->type = JSONTYPEUNDEFINED;
 				break;
 			}
 			memset(pArrayNode->array, 0, size * sizeof(pJsonNode));
-			// ½øĞĞÊı×éÔªËØÉî¿½±´
+			// è¿›è¡Œæ•°ç»„å…ƒç´ æ·±æ‹·è´
 			for (int i = 0; i < pArray->size; i++) {
 				if (pArray->array[i]) {
 					if (pArray->array[i]->type != pArray->type) {
@@ -3838,10 +4058,10 @@ pJsonArrayNode JSONArrayDeepClone(pJsonArrayNode pArray /* in */) {
 }
 
 /*
-* json Êı×Ö¶ÔÏóÉî¿½±´
+* json æ•°å­—å¯¹è±¡æ·±æ‹·è´
 * @param	pNumber jsonNumber
-* @param	isCopyKey char* ÊÇ·ñ½øĞĞ¼üÃû³Æ¿½±´
-* @return	pJsonNumberNode	ĞÂ´´½¨µÄjson Number
+* @param	isCopyKey char* æ˜¯å¦è¿›è¡Œé”®åç§°æ‹·è´
+* @return	pJsonNumberNode	æ–°åˆ›å»ºçš„json Number
 */
 pJsonNumberNode JSONNumberDeepClone(pJsonNumberNode pNumber /* in */, BOOLEAN isCopyKey /* in */) {
 	pJsonNumberNode pNumberNode = NULL;
@@ -3857,12 +4077,12 @@ pJsonNumberNode JSONNumberDeepClone(pJsonNumberNode pNumber /* in */, BOOLEAN is
 			break;
 		}
 		memset(pNumberNode, 0, sizeof(JsonNumberNode));
-		// ÊôĞÔ¿½±´µÄÊ±ºò£¬ĞèÒª¶Ô¼üÃû³Æ½øĞĞ¿½±´£¬×öÎªÊı×éÔªËØµÄÊ±ºòÔò²»ĞèÒª¼üÃû³Æ
+		// å±æ€§æ‹·è´çš„æ—¶å€™ï¼Œéœ€è¦å¯¹é”®åç§°è¿›è¡Œæ‹·è´ï¼Œåšä¸ºæ•°ç»„å…ƒç´ çš„æ—¶å€™åˆ™ä¸éœ€è¦é”®åç§°
 		if (isCopyKey) {
 			if (pNumber->node.keyName) {
 				pNumberNode->node.keyName = deepCloneString(pNumber->node.keyName);
 				if (!pNumberNode->node.keyName) {
-					// ¿½±´¼üÃû³ÆµÄÊ±ºò£¬ÄÚ´æÎŞ·¨·ÖÅä£¬Ôò½ÚµãÃ»ÓĞ´æÔÚµÄÒâÒå
+					// æ‹·è´é”®åç§°çš„æ—¶å€™ï¼Œå†…å­˜æ— æ³•åˆ†é…ï¼Œåˆ™èŠ‚ç‚¹æ²¡æœ‰å­˜åœ¨çš„æ„ä¹‰
 					JSONDestroyNumberNode(pNumberNode);
 					break;
 				}
@@ -3875,10 +4095,10 @@ pJsonNumberNode JSONNumberDeepClone(pJsonNumberNode pNumber /* in */, BOOLEAN is
 }
 
 /*
-* json ×Ö·û´®¶ÔÏóÉî¿½±´
+* json å­—ç¬¦ä¸²å¯¹è±¡æ·±æ‹·è´
 * @param	pString jsonString
-* @param	isCopyKey char* ÊÇ·ñ½øĞĞ¼üÃû³Æ¿½±´
-* @return	pJsonNumberNode	ĞÂ´´½¨µÄjson Number
+* @param	isCopyKey char* æ˜¯å¦è¿›è¡Œé”®åç§°æ‹·è´
+* @return	pJsonNumberNode	æ–°åˆ›å»ºçš„json Number
 */
 pJsonStringNode JSONStringDeepClone(pJsonStringNode pString /* in */, BOOLEAN isCopyKey /* in */) {
 	pJsonStringNode pStringNode = NULL;
@@ -3894,12 +4114,12 @@ pJsonStringNode JSONStringDeepClone(pJsonStringNode pString /* in */, BOOLEAN is
 			break;
 		}
 		memset(pStringNode, 0, sizeof(JsonStringNode));
-		// ÊôĞÔ¿½±´µÄÊ±ºò£¬ĞèÒª¶Ô¼üÃû³Æ½øĞĞ¿½±´£¬×öÎªÊı×éÔªËØµÄÊ±ºòÔò²»ĞèÒª¼üÃû³Æ
+		// å±æ€§æ‹·è´çš„æ—¶å€™ï¼Œéœ€è¦å¯¹é”®åç§°è¿›è¡Œæ‹·è´ï¼Œåšä¸ºæ•°ç»„å…ƒç´ çš„æ—¶å€™åˆ™ä¸éœ€è¦é”®åç§°
 		if (isCopyKey) {
 			if (pString->node.keyName) {
 				pStringNode->node.keyName = deepCloneString(pString->node.keyName);
 				if (!pStringNode->node.keyName) {
-					// ¿½±´¼üÃû³ÆµÄÊ±ºò£¬ÄÚ´æÎŞ·¨·ÖÅä£¬Ôò½ÚµãÃ»ÓĞ´æÔÚµÄÒâÒå
+					// æ‹·è´é”®åç§°çš„æ—¶å€™ï¼Œå†…å­˜æ— æ³•åˆ†é…ï¼Œåˆ™èŠ‚ç‚¹æ²¡æœ‰å­˜åœ¨çš„æ„ä¹‰
 					JSONDestroyStringNode(pStringNode);
 					break;
 				}
@@ -3912,10 +4132,10 @@ pJsonStringNode JSONStringDeepClone(pJsonStringNode pString /* in */, BOOLEAN is
 }
 
 /*
-* json null ¶ÔÏóÉî¿½±´
+* json null å¯¹è±¡æ·±æ‹·è´
 * @param	pNull pJsonNullNode
-* @param	isCopyKey char* ÊÇ·ñ½øĞĞ¼üÃû³Æ¿½±´
-* @return	pJsonNullNode	ĞÂ´´½¨µÄjson null
+* @param	isCopyKey char* æ˜¯å¦è¿›è¡Œé”®åç§°æ‹·è´
+* @return	pJsonNullNode	æ–°åˆ›å»ºçš„json null
 */
 pJsonNullNode JSONNullDeepClone(pJsonNullNode pNull /* in */, BOOLEAN isCopyKey /* in */) {
 	pJsonNullNode pNode = NULL;
@@ -3931,12 +4151,12 @@ pJsonNullNode JSONNullDeepClone(pJsonNullNode pNull /* in */, BOOLEAN isCopyKey 
 			break;
 		}
 		memset(pNode, 0, sizeof(JsonNullNode));
-		// ÊôĞÔ¿½±´µÄÊ±ºò£¬ĞèÒª¶Ô¼üÃû³Æ½øĞĞ¿½±´£¬×öÎªÊı×éÔªËØµÄÊ±ºòÔò²»ĞèÒª¼üÃû³Æ
+		// å±æ€§æ‹·è´çš„æ—¶å€™ï¼Œéœ€è¦å¯¹é”®åç§°è¿›è¡Œæ‹·è´ï¼Œåšä¸ºæ•°ç»„å…ƒç´ çš„æ—¶å€™åˆ™ä¸éœ€è¦é”®åç§°
 		if (isCopyKey) {
 			if (pNull->node.keyName) {
 				pNode->node.keyName = deepCloneString(pNull->node.keyName);
 				if (!pNode->node.keyName) {
-					// ¿½±´¼üÃû³ÆµÄÊ±ºò£¬ÄÚ´æÎŞ·¨·ÖÅä£¬Ôò½ÚµãÃ»ÓĞ´æÔÚµÄÒâÒå
+					// æ‹·è´é”®åç§°çš„æ—¶å€™ï¼Œå†…å­˜æ— æ³•åˆ†é…ï¼Œåˆ™èŠ‚ç‚¹æ²¡æœ‰å­˜åœ¨çš„æ„ä¹‰
 					JSONDestroyNullNode(pNode);
 					break;
 				}
@@ -3949,10 +4169,10 @@ pJsonNullNode JSONNullDeepClone(pJsonNullNode pNull /* in */, BOOLEAN isCopyKey 
 }
 
 /*
-* json Boolean ¶ÔÏóÉî¿½±´
+* json Boolean å¯¹è±¡æ·±æ‹·è´
 * @param	pNull pJsonBooleanNode
-* @param	isCopyKey char* ÊÇ·ñ½øĞĞ¼üÃû³Æ¿½±´
-* @return	pJsonBooleanNode	ĞÂ´´½¨µÄjson Boolean
+* @param	isCopyKey char* æ˜¯å¦è¿›è¡Œé”®åç§°æ‹·è´
+* @return	pJsonBooleanNode	æ–°åˆ›å»ºçš„json Boolean
 */
 pJsonBooleanNode JSONBooleanDeepClone(pJsonBooleanNode pBoolean /* in */, BOOLEAN isCopyKey /* in */) {
 	pJsonBooleanNode pNode = NULL;
@@ -3968,12 +4188,12 @@ pJsonBooleanNode JSONBooleanDeepClone(pJsonBooleanNode pBoolean /* in */, BOOLEA
 			break;
 		}
 		memset(pNode, 0, sizeof(JsonBooleanNode));
-		// ÊôĞÔ¿½±´µÄÊ±ºò£¬ĞèÒª¶Ô¼üÃû³Æ½øĞĞ¿½±´£¬×öÎªÊı×éÔªËØµÄÊ±ºòÔò²»ĞèÒª¼üÃû³Æ
+		// å±æ€§æ‹·è´çš„æ—¶å€™ï¼Œéœ€è¦å¯¹é”®åç§°è¿›è¡Œæ‹·è´ï¼Œåšä¸ºæ•°ç»„å…ƒç´ çš„æ—¶å€™åˆ™ä¸éœ€è¦é”®åç§°
 		if (isCopyKey) {
 			if (pBoolean->node.keyName) {
 				pNode->node.keyName = deepCloneString(pBoolean->node.keyName);
 				if (!pNode->node.keyName) {
-					// ¿½±´¼üÃû³ÆµÄÊ±ºò£¬ÄÚ´æÎŞ·¨·ÖÅä£¬Ôò½ÚµãÃ»ÓĞ´æÔÚµÄÒâÒå
+					// æ‹·è´é”®åç§°çš„æ—¶å€™ï¼Œå†…å­˜æ— æ³•åˆ†é…ï¼Œåˆ™èŠ‚ç‚¹æ²¡æœ‰å­˜åœ¨çš„æ„ä¹‰
 					JSONDestroyBooleanNode(pNode);
 					break;
 				}
@@ -3986,8 +4206,8 @@ pJsonBooleanNode JSONBooleanDeepClone(pJsonBooleanNode pBoolean /* in */, BOOLEA
 }
 
 /*
-* Ïú»Ù Number ÀàĞÍÀàĞÍ½Úµã
-* @param	pNode NumberÀàĞÍ½Úµã
+* é”€æ¯ Number ç±»å‹ç±»å‹èŠ‚ç‚¹
+* @param	pNode Numberç±»å‹èŠ‚ç‚¹
 * @return void
 */
 void JSONDestroyNumberNode(pJsonNumberNode pNode /* in */) {
@@ -3998,7 +4218,7 @@ void JSONDestroyNumberNode(pJsonNumberNode pNode /* in */) {
 		if (pNode->node.type != JSONTYPENUMBER) {
 			break;
 		}
-		pNode->node.type = 0;
+		pNode->node.type = (JSON_DATA_TYPE)0;
 		if (pNode->node.keyName) {
 			free(pNode->node.keyName);
 			pNode->node.keyName = NULL;
@@ -4009,8 +4229,31 @@ void JSONDestroyNumberNode(pJsonNumberNode pNode /* in */) {
 }
 
 /*
-* Ïú»Ù String ÀàĞÍÀàĞÍ½Úµã
-* @param	pNode StringÀàĞÍ½Úµã
+* é”€æ¯ Long Number ç±»å‹ç±»å‹èŠ‚ç‚¹
+* @param	pNode Numberç±»å‹èŠ‚ç‚¹
+* @return void
+*/
+void JSONDestroyLongNumberNode(pJsonLongNumberNode pNode /* in */) {
+	do {
+		if (!pNode) {
+			break;
+		}
+		if (pNode->node.type != JSONTYPELONGNUMBER) {
+			break;
+		}
+		pNode->node.type = (JSON_DATA_TYPE)0;
+		if (pNode->node.keyName) {
+			free(pNode->node.keyName);
+			pNode->node.keyName = NULL;
+		}
+		free(pNode);
+		pNode = NULL;
+	} while (0);
+}
+
+/*
+* é”€æ¯ String ç±»å‹ç±»å‹èŠ‚ç‚¹
+* @param	pNode Stringç±»å‹èŠ‚ç‚¹
 * @return void
 */
 void JSONDestroyStringNode(pJsonStringNode pNode /* in */) {
@@ -4021,7 +4264,7 @@ void JSONDestroyStringNode(pJsonStringNode pNode /* in */) {
 		if (pNode->node.type != JSONTYPESTRING) {
 			break;
 		}
-		pNode->node.type = 0;
+		pNode->node.type = (JSON_DATA_TYPE)0;
 		if (pNode->value) {
 			free(pNode->value);
 		}
@@ -4035,8 +4278,8 @@ void JSONDestroyStringNode(pJsonStringNode pNode /* in */) {
 }
 
 /*
-* Ïú»Ù Array ÀàĞÍÀàĞÍ½Úµã
-* @param	pNode ArrayÀàĞÍ½Úµã
+* é”€æ¯ Array ç±»å‹ç±»å‹èŠ‚ç‚¹
+* @param	pNode Arrayç±»å‹èŠ‚ç‚¹
 * @return void
 */
 void JSONDestroyArrayNode(pJsonArrayNode pNode /* in */) {
@@ -4048,11 +4291,14 @@ void JSONDestroyArrayNode(pJsonArrayNode pNode /* in */) {
 		if (pNode->node.type != JSONTYPEARRAY) {
 			break;
 		}
-		pNode->node.type = 0;
+		pNode->node.type = (JSON_DATA_TYPE)0;
 		if (pNode->size && pNode->array) {
 			for (i = 0; i < pNode->size; i++) {
 				if (pNode->array[i]->type == JSONTYPENUMBER) {
 					JSONDestroyNumberNode((pJsonNumberNode)pNode->array[i]);
+				}
+				else if (pNode->array[i]->type == JSONTYPELONGNUMBER) {
+					JSONDestroyLongNumberNode((pJsonLongNumberNode)pNode->array[i]);
 				}
 				else if (pNode->array[i]->type == JSONTYPESTRING) {
 					JSONDestroyStringNode((pJsonStringNode)pNode->array[i]);
@@ -4076,7 +4322,7 @@ void JSONDestroyArrayNode(pJsonArrayNode pNode /* in */) {
 			free(pNode->array);
 			pNode->array = NULL;
 		}
-		//printf("Ïú»Ù Array ½Úµã£¬ÊôĞÔÃû³Æ: %s\n", pNode->node.keyName);
+		//printf("é”€æ¯ Array èŠ‚ç‚¹ï¼Œå±æ€§åç§°: %s\n", pNode->node.keyName);
 		if (pNode->node.keyName) {
 			free(pNode->node.keyName);
 			pNode->node.keyName = NULL;
@@ -4087,8 +4333,8 @@ void JSONDestroyArrayNode(pJsonArrayNode pNode /* in */) {
 }
 
 /*
-* Ïú»Ù Object ÀàĞÍÀàĞÍ½Úµã
-* @param	pNode ObjectÀàĞÍ½Úµã
+* é”€æ¯ Object ç±»å‹ç±»å‹èŠ‚ç‚¹
+* @param	pNode Objectç±»å‹èŠ‚ç‚¹
 * @return void
 */
 void JSONDestroyObjectNode(pJsonObjectNode pNode /* in */) {
@@ -4100,11 +4346,11 @@ void JSONDestroyObjectNode(pJsonObjectNode pNode /* in */) {
 		if (pNode->node.type != JSONTYPEOBJECT) {
 			break;
 		}
-		pNode->node.type = 0;
+		pNode->node.type = (JSON_DATA_TYPE)0;
 		for (i = 0; i < HASH_MAX; i++) {
-			// ÅĞ¶Ïµ±Ç°ÊôĞÔÊÇ·ñ´æÔÚ£¬´æÔÚÔòÏú»Ù
+			// åˆ¤æ–­å½“å‰å±æ€§æ˜¯å¦å­˜åœ¨ï¼Œå­˜åœ¨åˆ™é”€æ¯
 			if (pNode->table[i]) {
-				// ¶Ôµ±Ç°ÊôĞÔ£¬½øĞĞÁ´±íÊ½Ïú»Ù
+				// å¯¹å½“å‰å±æ€§ï¼Œè¿›è¡Œé“¾è¡¨å¼é”€æ¯
 				pJsonNode pNext = NULL;
 				do {
 					if (!pNode->table[i]) {
@@ -4112,11 +4358,15 @@ void JSONDestroyObjectNode(pJsonObjectNode pNode /* in */) {
 					}
 					pNext = pNode->table[i]->next;
 					if (pNode->table[i]->type == JSONTYPENUMBER) {
-						// Êı×ÖÀàĞÍ£¬Ö±½ÓÏú»Ù½Úµã
+						// æ•°å­—ç±»å‹ï¼Œç›´æ¥é”€æ¯èŠ‚ç‚¹
 						JSONDestroyNumberNode((pJsonNumberNode)pNode->table[i]);
 					}
+					else if (pNode->table[i]->type == JSONTYPELONGNUMBER) {
+						// é•¿æ•´å‹ç±»å‹ï¼Œå…ˆè¿›è¡Œé”€æ¯é•¿æ•´å‹èŠ‚ç‚¹
+						JSONDestroyLongNumberNode((pJsonLongNumberNode)pNode->table[i]);
+					}
 					else if (pNode->table[i]->type == JSONTYPESTRING) {
-						// ×Ö·û´®ÀàĞÍ£¬ÏÈ½øĞĞÏú»Ù×Ö·û´®¿Õ¼ä
+						// å­—ç¬¦ä¸²ç±»å‹ï¼Œå…ˆè¿›è¡Œé”€æ¯å­—ç¬¦ä¸²ç©ºé—´
 						JSONDestroyStringNode((pJsonStringNode)pNode->table[i]);
 					}
 					else if (pNode->table[i]->type == JSONTYPEARRAY) {
@@ -4147,8 +4397,8 @@ void JSONDestroyObjectNode(pJsonObjectNode pNode /* in */) {
 }
 
 /*
-* Ïú»Ù null ÀàĞÍÀàĞÍ½Úµã
-* @param	pNode nullÀàĞÍ½Úµã
+* é”€æ¯ null ç±»å‹ç±»å‹èŠ‚ç‚¹
+* @param	pNode nullç±»å‹èŠ‚ç‚¹
 * @return void
 */
 void JSONDestroyNullNode(pJsonNullNode pNode /* in */) {
@@ -4167,8 +4417,8 @@ void JSONDestroyNullNode(pJsonNullNode pNode /* in */) {
 }
 
 /*
-* Ïú»Ù Boolean ÀàĞÍÀàĞÍ½Úµã
-* @param	pNode BooleanÀàĞÍ½Úµã
+* é”€æ¯ Boolean ç±»å‹ç±»å‹èŠ‚ç‚¹
+* @param	pNode Booleanç±»å‹èŠ‚ç‚¹
 * @return void
 */
 void JSONDestroyBooleanNode(pJsonBooleanNode pNode /* in */) {
@@ -4187,9 +4437,9 @@ void JSONDestroyBooleanNode(pJsonBooleanNode pNode /* in */) {
 }
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÎ²²¿×·¼ÓÔªËØ
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	pNode pJsonNode	ĞèÒªÌí¼ÓµÄ½Úµã
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å°¾éƒ¨è¿½åŠ å…ƒç´ 
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	pNode pJsonNode	éœ€è¦æ·»åŠ çš„èŠ‚ç‚¹
 * @return	void
 */
 void JSONArrayPush(pJsonArrayNode pArrayNode /* in */, pJsonNode pNode /* in */) {
@@ -4203,17 +4453,17 @@ void JSONArrayPush(pJsonArrayNode pArrayNode /* in */, pJsonNode pNode /* in */)
 		if (!pNode) {
 			break;
 		}
-		//// Êı×éÀàĞÍ£¬ºÍĞèÒª²åÈëµÄÊı¾İÀàĞÍÊÇ·ñÆ¥Åä
+		//// æ•°ç»„ç±»å‹ï¼Œå’Œéœ€è¦æ’å…¥çš„æ•°æ®ç±»å‹æ˜¯å¦åŒ¹é…
 		//if (pArrayNode->type != JSONTYPEUNDEFINED && (pArrayNode->type != pNode->type)) {
 		//	break;
 		//}
 		if (pNode->type == JSONTYPEUNDEFINED) {
 			break;
 		}
-		// ÅĞ¶ÏÊı×éÊÇ·ñĞèÒªÀ©Èİ
+		// åˆ¤æ–­æ•°ç»„æ˜¯å¦éœ€è¦æ‰©å®¹
 		int minSize = (pArrayNode->size / ARRAY_MIN_SIZE) * ARRAY_MIN_SIZE;
 		if (minSize >= pArrayNode->size) {
-			// ĞèÀ©Èİ
+			// éœ€æ‰©å®¹
 			pJsonNode* tmpArr = (pJsonNode*)malloc((minSize + ARRAY_MIN_SIZE) * sizeof(pJsonNode));
 			if (!tmpArr) {
 				JSONDestroy(pNode);
@@ -4224,7 +4474,7 @@ void JSONArrayPush(pJsonArrayNode pArrayNode /* in */, pJsonNode pNode /* in */)
 			free(pArrayNode->array);
 			pArrayNode->array = tmpArr;
 		}
-		// µÚÒ»´Î²åÈëÔªËØÊ±
+		// ç¬¬ä¸€æ¬¡æ’å…¥å…ƒç´ æ—¶
 		if (!pArrayNode->array) {
 			pArrayNode->array = (pJsonNode*)malloc(ARRAY_MIN_SIZE);
 			if (!pArrayNode->array) {
@@ -4238,9 +4488,9 @@ void JSONArrayPush(pJsonArrayNode pArrayNode /* in */, pJsonNode pNode /* in */)
 }
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÍ·²¿×·¼ÓÔªËØ
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	pNode pJsonNode	ĞèÒªÌí¼ÓµÄ½Úµã
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å¤´éƒ¨è¿½åŠ å…ƒç´ 
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	pNode pJsonNode	éœ€è¦æ·»åŠ çš„èŠ‚ç‚¹
 * @return	void
 */
 void JSONArrayUnshift(pJsonArrayNode pArrayNode /* in */, pJsonNode pNode /* in */) {
@@ -4254,17 +4504,17 @@ void JSONArrayUnshift(pJsonArrayNode pArrayNode /* in */, pJsonNode pNode /* in 
 		if (!pNode) {
 			break;
 		}
-		// Êı×éÀàĞÍ£¬ºÍĞèÒª²åÈëµÄÊı¾İÀàĞÍÊÇ·ñÆ¥Åä
+		// æ•°ç»„ç±»å‹ï¼Œå’Œéœ€è¦æ’å…¥çš„æ•°æ®ç±»å‹æ˜¯å¦åŒ¹é…
 		if (pArrayNode->type != JSONTYPEUNDEFINED && (pArrayNode->type != pNode->type)) {
 			break;
 		}
 		if (pNode->type == JSONTYPEUNDEFINED) {
 			break;
 		}
-		// ÅĞ¶ÏÊı×éÊÇ·ñĞèÒªÀ©Èİ
+		// åˆ¤æ–­æ•°ç»„æ˜¯å¦éœ€è¦æ‰©å®¹
 		int minSize = (pArrayNode->size / ARRAY_MIN_SIZE) * ARRAY_MIN_SIZE;
 		if (minSize >= pArrayNode->size) {
-			// ĞèÀ©Èİ
+			// éœ€æ‰©å®¹
 			pJsonNode* tmpArr = (pJsonNode*)malloc((minSize + ARRAY_MIN_SIZE) * sizeof(pJsonNode));
 			if (!tmpArr) {
 				break;
@@ -4279,7 +4529,7 @@ void JSONArrayUnshift(pJsonArrayNode pArrayNode /* in */, pJsonNode pNode /* in 
 			}
 			pArrayNode->array[0] = NULL;
 		}
-		// µÚÒ»´Î²åÈëÔªËØÊ±
+		// ç¬¬ä¸€æ¬¡æ’å…¥å…ƒç´ æ—¶
 		if (!pArrayNode->array) {
 			pArrayNode->array = (pJsonNode*)malloc(ARRAY_MIN_SIZE);
 			if (!pArrayNode->array) {
@@ -4293,9 +4543,9 @@ void JSONArrayUnshift(pJsonArrayNode pArrayNode /* in */, pJsonNode pNode /* in 
 }
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÎ²²¿×·¼ÓÊı×Ö
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	number double	ĞèÒªÌí¼ÓµÄÊı×Ö
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å°¾éƒ¨è¿½åŠ æ•°å­—
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	number double	éœ€è¦æ·»åŠ çš„æ•°å­—
 * @return	void
 */
 void JSONArrayPushNumber(pJsonArrayNode pArrayNode /* in */, double number /* in */) {
@@ -4312,9 +4562,28 @@ void JSONArrayPushNumber(pJsonArrayNode pArrayNode /* in */, double number /* in
 }
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÎ²²¿×·¼Ó×Ö·û´®
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	pString char*	ĞèÒªÌí¼ÓµÄ×Ö·û´®
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å°¾éƒ¨è¿½åŠ é•¿æ•°å­—
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	number UINT64	éœ€è¦æ·»åŠ çš„æ•°å­—
+* @return	void
+*/
+void JSONArrayPushLongNumber(pJsonArrayNode pArrayNode /* in */, UINT64 number /* in */){
+	do {
+		if (!pArrayNode) {
+			break;
+		}
+		if (pArrayNode->node.type != JSONTYPEARRAY) {
+			break;
+		}
+		pJsonLongNumberNode pNode = JSONCreateLongNumberNode(NULL, number);
+		JSONArrayPush(pArrayNode, (pJsonNode)pNode);
+	} while (0);
+}
+
+/*
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å°¾éƒ¨è¿½åŠ å­—ç¬¦ä¸²
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	pString char*	éœ€è¦æ·»åŠ çš„å­—ç¬¦ä¸²
 * @return	void
 */
 void JSONArrayPushString(pJsonArrayNode pArrayNode /* in */, char* pString /* in */) {
@@ -4331,9 +4600,9 @@ void JSONArrayPushString(pJsonArrayNode pArrayNode /* in */, char* pString /* in
 }
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÎ²²¿×·¼ÓÊı×é
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	pArr pJsonArrayNode	ĞèÒªÌí¼ÓµÄÊı×é½Úµã
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å°¾éƒ¨è¿½åŠ æ•°ç»„
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	pArr pJsonArrayNode	éœ€è¦æ·»åŠ çš„æ•°ç»„èŠ‚ç‚¹
 * @return	void
 */
 void JSONArrayPushArray(pJsonArrayNode pArrayNode /* in */, pJsonArrayNode pArr /* in */) {
@@ -4341,9 +4610,9 @@ void JSONArrayPushArray(pJsonArrayNode pArrayNode /* in */, pJsonArrayNode pArr 
 }
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÎ²²¿×·¼Ó¶ÔÏó
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	pObject pJsonObjectNode	ĞèÒªÌí¼ÓµÄ¶ÔÏó½Úµã
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å°¾éƒ¨è¿½åŠ å¯¹è±¡
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	pObject pJsonObjectNode	éœ€è¦æ·»åŠ çš„å¯¹è±¡èŠ‚ç‚¹
 * @return	void
 */
 void JSONArrayPushObject(pJsonArrayNode pArrayNode /* in */, pJsonObjectNode pObject /* in */) {
@@ -4351,8 +4620,8 @@ void JSONArrayPushObject(pJsonArrayNode pArrayNode /* in */, pJsonObjectNode pOb
 }
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÎ²²¿×·¼Ó null
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å°¾éƒ¨è¿½åŠ  null
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
 * @return	void
 */
 void JSONArrayPushNull(pJsonArrayNode pArrayNode /* in */) {
@@ -4369,9 +4638,9 @@ void JSONArrayPushNull(pJsonArrayNode pArrayNode /* in */) {
 }
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÎ²²¿×·¼Ó Boolean
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	value BOOLEAN	ĞèÒªÌí¼ÓµÄ Boolean
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å°¾éƒ¨è¿½åŠ  Boolean
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	value BOOLEAN	éœ€è¦æ·»åŠ çš„ Boolean
 * @return	void
 */
 void JSONArrayPushBoolean(pJsonArrayNode pArrayNode /* in */, BOOLEAN value /* in */) {
@@ -4388,9 +4657,9 @@ void JSONArrayPushBoolean(pJsonArrayNode pArrayNode /* in */, BOOLEAN value /* i
 }
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÍ·²¿×·¼ÓÊı×Ö
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	number double	ĞèÒªÌí¼ÓµÄÊı×Ö
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å¤´éƒ¨è¿½åŠ æ•°å­—
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	number double	éœ€è¦æ·»åŠ çš„æ•°å­—
 * @return	void
 */
 void JSONArrayUnshiftNumber(pJsonArrayNode pArrayNode /* in */, double number /* in */) {
@@ -4407,9 +4676,28 @@ void JSONArrayUnshiftNumber(pJsonArrayNode pArrayNode /* in */, double number /*
 }
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÍ·²¿×·¼Ó×Ö·û´®
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	pString char*	ĞèÒªÌí¼ÓµÄ×Ö·û´®
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å¤´éƒ¨è¿½åŠ é•¿æ•°å­—
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	number UINT64	éœ€è¦æ·»åŠ çš„æ•°å­—
+* @return	void
+*/
+void JSONArrayUnshiftLongNumber(pJsonArrayNode pArrayNode /* in */, UINT64 number /* in */){
+	do {
+		if (!pArrayNode) {
+			break;
+		}
+		if (pArrayNode->node.type != JSONTYPEARRAY) {
+			break;
+		}
+		pJsonLongNumberNode pNode = JSONCreateLongNumberNode(NULL, number);
+		JSONArrayUnshift(pArrayNode, (pJsonNode)pNode);
+	} while (0);
+}
+
+/*
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å¤´éƒ¨è¿½åŠ å­—ç¬¦ä¸²
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	pString char*	éœ€è¦æ·»åŠ çš„å­—ç¬¦ä¸²
 * @return	void
 */
 void JSONArrayUnshiftString(pJsonArrayNode pArrayNode /* in */, char* pString /* in */) {
@@ -4426,9 +4714,9 @@ void JSONArrayUnshiftString(pJsonArrayNode pArrayNode /* in */, char* pString /*
 }
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÍ·²¿×·¼ÓÊı×é
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	pArr pJsonArrayNode	ĞèÒªÌí¼ÓµÄÊı×é
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å¤´éƒ¨è¿½åŠ æ•°ç»„
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	pArr pJsonArrayNode	éœ€è¦æ·»åŠ çš„æ•°ç»„
 * @return	void
 */
 void JSONArrayUnshiftArray(pJsonArrayNode pArrayNode /* in */, pJsonArrayNode pArr /* in */) {
@@ -4436,9 +4724,9 @@ void JSONArrayUnshiftArray(pJsonArrayNode pArrayNode /* in */, pJsonArrayNode pA
 }
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÍ·²¿×·¼Ó¶ÔÏó
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	pObject pJsonObjectNode	ĞèÒªÌí¼ÓµÄ¶ÔÏó
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å¤´éƒ¨è¿½åŠ å¯¹è±¡
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	pObject pJsonObjectNode	éœ€è¦æ·»åŠ çš„å¯¹è±¡
 * @return	void
 */
 void JSONArrayUnshiftObject(pJsonArrayNode pArrayNode /* in */, pJsonObjectNode pObject /* in */) {
@@ -4446,8 +4734,8 @@ void JSONArrayUnshiftObject(pJsonArrayNode pArrayNode /* in */, pJsonObjectNode 
 }
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÍ·²¿×·¼Ó null
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å¤´éƒ¨è¿½åŠ  null
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
 * @return	void
 */
 void JSONArrayUnshiftNull(pJsonArrayNode pArrayNode /* in */) {
@@ -4464,9 +4752,9 @@ void JSONArrayUnshiftNull(pJsonArrayNode pArrayNode /* in */) {
 }
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÍ·²¿×·¼Ó Boolean
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
-* @param	value BOOLEAN	ĞèÒªÌí¼ÓµÄ Boolean
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å¤´éƒ¨è¿½åŠ  Boolean
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @param	value BOOLEAN	éœ€è¦æ·»åŠ çš„ Boolean
 * @return	void
 */
 void JSONArrayUnshiftBoolean(pJsonArrayNode pArrayNode /* in */, BOOLEAN value /* in */) {
@@ -4483,8 +4771,8 @@ void JSONArrayUnshiftBoolean(pJsonArrayNode pArrayNode /* in */, BOOLEAN value /
 }
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÎ²²¿É¾³ıÔªËØ£¬²¢Ïú»Ù¸ÃÔªËØ
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å°¾éƒ¨åˆ é™¤å…ƒç´ ï¼Œå¹¶é”€æ¯è¯¥å…ƒç´ 
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
 * @return	void
 */
 void JSONArrayPop(pJsonArrayNode pArrayNode /* in */) {
@@ -4522,7 +4810,7 @@ void JSONArrayPop(pJsonArrayNode pArrayNode /* in */) {
 		}
 		pArrayNode->size--;
 		if (pArrayNode->size == 0) {
-			// ÊÍ·ÅÊı×é¿Õ¼ä
+			// é‡Šæ”¾æ•°ç»„ç©ºé—´
 			free(pArrayNode->array);
 			pArrayNode->array = NULL;
 		}
@@ -4530,8 +4818,8 @@ void JSONArrayPop(pJsonArrayNode pArrayNode /* in */) {
 }
 
 /*
-* Ïò json Êı×é½ÚµãÖĞÊı×éÍ·²¿É¾³ıÔªËØ£¬²¢Ïú»Ù¸ÃÔªËØ
-* @param	pArrayNode pJsonArrayNode Êı×é½Úµã
+* å‘ json æ•°ç»„èŠ‚ç‚¹ä¸­æ•°ç»„å¤´éƒ¨åˆ é™¤å…ƒç´ ï¼Œå¹¶é”€æ¯è¯¥å…ƒç´ 
+* @param	pArrayNode pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
 * @return	void
 */
 void JSONArrayShift(pJsonArrayNode pArrayNode /* in */) {
@@ -4569,7 +4857,7 @@ void JSONArrayShift(pJsonArrayNode pArrayNode /* in */) {
 		}
 		pArrayNode->size--;
 		if (pArrayNode->size == 0) {
-			// ÊÍ·ÅÊı×é¿Õ¼ä
+			// é‡Šæ”¾æ•°ç»„ç©ºé—´
 			free(pArrayNode->array);
 			pArrayNode->array = NULL;
 			break;
@@ -4582,9 +4870,9 @@ void JSONArrayShift(pJsonArrayNode pArrayNode /* in */) {
 }
 
 /*
-* »ñÈ¡Êı×éÀàĞÍµÄÊı¾İ³¤¶È
-* @param	pArray	pJsonArrayNode Êı×é½Úµã
-* @return	unsigned int	Êı×é³¤¶È
+* è·å–æ•°ç»„ç±»å‹çš„æ•°æ®é•¿åº¦
+* @param	pArray	pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
+* @return	unsigned int	æ•°ç»„é•¿åº¦
 */
 unsigned int JSONArrayGetLength(pJsonArrayNode pArray /* in */) {
 	unsigned int len = 0;
@@ -4603,10 +4891,10 @@ unsigned int JSONArrayGetLength(pJsonArrayNode pArray /* in */) {
 }
 
 /*
-* »ñÈ¡Êı×éÖ¸¶¨Î»ÖÃÔªËØ
-* @param	pArray	pJsonArrayNode Êı×é½Úµã
+* è·å–æ•°ç»„æŒ‡å®šä½ç½®å…ƒç´ 
+* @param	pArray	pJsonArrayNode æ•°ç»„èŠ‚ç‚¹
 * @param	pos		int
-* @return	pJsonNode	Êı×éÔªËØ
+* @return	pJsonNode	æ•°ç»„å…ƒç´ 
 */
 pJsonNode JSONArrayGetNode(pJsonArrayNode pArray /* in */, int pos /* in */) {
 	pJsonNode pNode = NULL;
@@ -4631,9 +4919,9 @@ pJsonNode JSONArrayGetNode(pJsonArrayNode pArray /* in */, int pos /* in */) {
 }
 
 /*
-* »ñÈ¡ ½Úµã Êı¾İÀàĞÍ
-* @param	pNode	pJsonNode	½Úµã
-* @return	JSON_DATA_TYPE		json ½ÚµãµÄÊı¾İÀàĞÍ
+* è·å– èŠ‚ç‚¹ æ•°æ®ç±»å‹
+* @param	pNode	pJsonNode	èŠ‚ç‚¹
+* @return	JSON_DATA_TYPE		json èŠ‚ç‚¹çš„æ•°æ®ç±»å‹
 */
 JSON_DATA_TYPE JSONNodeGetType(pJsonNode pNode /* in */) {
 	JSON_DATA_TYPE type = JSONTYPEUNDEFINED;
@@ -4646,12 +4934,12 @@ JSON_DATA_TYPE JSONNodeGetType(pJsonNode pNode /* in */) {
 	return type;
 }
 
-/*
-* »ñÈ¡ Object ÊôĞÔÊı¾İÀàĞÍ
-* @param	pObject	pJsonObjectNode	json ¶ÔÏó
-* @param	key char*		¼üÖµ
-* @return	JSON_DATA_TYPE		json ½ÚµãµÄÊı¾İÀàĞÍ
-*/
+/**
+ * è·å– Object å±æ€§æ•°æ®ç±»å‹
+ * @param	pObject	pJsonObjectNode	json å¯¹è±¡
+ * @param	key char*		é”®å€¼
+ * @return	JSON_DATA_TYPE		json èŠ‚ç‚¹çš„æ•°æ®ç±»å‹
+ */
 JSON_DATA_TYPE JSONObjectGetAttrType(pJsonObjectNode pObject /* in */, char* key /* in */) {
 	JSON_DATA_TYPE type = JSONTYPEUNDEFINED;
 	do {
@@ -4666,7 +4954,7 @@ JSON_DATA_TYPE JSONObjectGetAttrType(pJsonObjectNode pObject /* in */, char* key
 			break;
 		}
 		if (pObject->table[idx]) {
-			// ½øĞĞÁ´Ê½±éÀú
+			// è¿›è¡Œé“¾å¼éå†
 			pJsonNode pNode = pObject->table[idx];
 			do {
 				if (strcmp(key, pNode->keyName) == 0) {
@@ -4681,8 +4969,8 @@ JSON_DATA_TYPE JSONObjectGetAttrType(pJsonObjectNode pObject /* in */, char* key
 }
 
 /*
-* »ñÈ¡Êı×Ö½ÚµãµÄÊıÖµ
-* @param	pNode	pJsonNumberNode	Êı×Ö½Úµã
+* è·å–æ•°å­—èŠ‚ç‚¹çš„æ•°å€¼
+* @param	pNode	pJsonNumberNode	æ•°å­—èŠ‚ç‚¹
 * @param	pValue	double*
 * @return	void
 */
@@ -4699,8 +4987,26 @@ void JSONNodeGetNumberValue(pJsonNumberNode pNode /* in */, double* pValue /* ou
 }
 
 /*
-* »ñÈ¡×Ö·û´®½ÚµãµÄµÄ×Ö·û´®
-* @param	pNode	pJsonStringNode	×Ö·û´®½Úµã
+* è·å–é•¿æ•°å­—èŠ‚ç‚¹çš„æ•°å€¼
+* @param	pNode	pJsonNumberNode	æ•°å­—èŠ‚ç‚¹
+* @param	pValue	UINT64*
+* @return	void
+*/
+void JSONNodeGetLongNumberValue(pJsonNumberNode pNode /* in */, UINT64* pValue /* out */){
+	do {
+		if (!pNode) {
+			break;
+		}
+		if (pNode->node.type != JSONTYPELONGNUMBER) {
+			break;
+		}
+		*pValue = pNode->value;
+	} while (0);
+}
+
+/*
+* è·å–å­—ç¬¦ä¸²èŠ‚ç‚¹çš„çš„å­—ç¬¦ä¸²
+* @param	pNode	pJsonStringNode	å­—ç¬¦ä¸²èŠ‚ç‚¹
 * @param	ppValue	char**
 * @return	void
 */
@@ -4725,8 +5031,8 @@ void JSONNodeGetStringValue(pJsonStringNode pNode /* in */, char** ppValue /* ou
 }
 
 /*
-* »ñÈ¡ Boolean ½ÚµãµÄÖµ
-* @param	pNode	pJsonBooleanNode	Êı×Ö½Úµã
+* è·å– Boolean èŠ‚ç‚¹çš„å€¼
+* @param	pNode	pJsonBooleanNode	æ•°å­—èŠ‚ç‚¹
 * @param	pValue	double*
 * @return	void
 */
@@ -4743,10 +5049,10 @@ void JSONNodeGetBooleanValue(pJsonBooleanNode pNode /* in */, BOOLEAN* pValue /*
 }
 
 /*
-* »ñÈ¡ json Êı×ÖÊôĞÔ½ÚµãµÄÊıÖµ
-* @param	pObject		pJsonObjectNode json ¶ÔÏó
-* @param	key			char*			¼ü
-* @param	pValue		double*			Öµ
+* è·å– json æ•°å­—å±æ€§èŠ‚ç‚¹çš„æ•°å€¼
+* @param	pObject		pJsonObjectNode json å¯¹è±¡
+* @param	key			char*			é”®
+* @param	pValue		double*			å€¼
 * @return	void
 */
 void JSONObjectGetNumberAttr(pJsonObjectNode pObject /* in */, char* key /* in */, double* pValue /* out */) {
@@ -4762,7 +5068,7 @@ void JSONObjectGetNumberAttr(pJsonObjectNode pObject /* in */, char* key /* in *
 			break;
 		}
 		if (pObject->table[idx]) {
-			// ½øĞĞÁ´Ê½±éÀú
+			// è¿›è¡Œé“¾å¼éå†
 			pJsonNode pNode = pObject->table[idx];
 			do {
 				if (strcmp(key, pNode->keyName) == 0) {
@@ -4779,13 +5085,13 @@ void JSONObjectGetNumberAttr(pJsonObjectNode pObject /* in */, char* key /* in *
 }
 
 /*
-* »ñÈ¡ json ×Ö·û´®ÊôĞÔ½ÚµãµÄ×Ö·û´®
-* @param	pObject		pJsonObjectNode json ¶ÔÏó
-* @param	key			char*			¼ü
-* @param	ppValue		char**			Öµ
+* è·å– json é•¿æ•°å­—å±æ€§èŠ‚ç‚¹çš„æ•°å€¼
+* @param	pObject		pJsonObjectNode json å¯¹è±¡
+* @param	key			char*			é”®
+* @param	pValue		UINT64*			å€¼
 * @return	void
 */
-void JSONObjectGetStringAttr(pJsonObjectNode pObject /* in */, char* key /* in */, char** ppValue /* out */) {
+void JSONObjectGetLongNumberAttr(pJsonObjectNode pObject /* in */, char* key /* in */, UINT64* pValue /* out */){
 	do {
 		if (!pObject) {
 			break;
@@ -4798,19 +5104,14 @@ void JSONObjectGetStringAttr(pJsonObjectNode pObject /* in */, char* key /* in *
 			break;
 		}
 		if (pObject->table[idx]) {
-			// ½øĞĞÁ´Ê½±éÀú
+			// è¿›è¡Œé“¾å¼éå†
 			pJsonNode pNode = pObject->table[idx];
 			do {
 				if (strcmp(key, pNode->keyName) == 0) {
-					if (pNode->type != JSONTYPESTRING) {
+					if (pNode->type != JSONTYPELONGNUMBER) {
 						break;
 					}
-					*ppValue = (char*)malloc(strlen(((pJsonStringNode)pNode)->value) + 1);
-					if (!*ppValue) {
-						break;
-					}
-					memset(*ppValue, 0, strlen(((pJsonStringNode)pNode)->value) + 1);
-					strcat(*ppValue, ((pJsonStringNode)pNode)->value);
+					*pValue = ((pJsonLongNumberNode)pNode)->value;
 					break;
 				}
 				pNode = pNode->next;
@@ -4819,11 +5120,54 @@ void JSONObjectGetStringAttr(pJsonObjectNode pObject /* in */, char* key /* in *
 	} while (0);
 }
 
+/**
+ * è·å– json å­—ç¬¦ä¸²å±æ€§èŠ‚ç‚¹çš„å­—ç¬¦ä¸²
+ * @param	pObject		pJsonObjectNode json å¯¹è±¡
+ * @param	key			char*			é”®
+ * @param	ppValue		char**			å€¼
+ * @return	void
+ */
+void JSONObjectGetStringAttr(pJsonObjectNode pObject /* in */, char* key /* in */, char** ppValue /* out */) {
+	do{
+		if(!pObject || !key || !ppValue) {
+			break;
+		}
+		if(pObject->node.type != JSONTYPEOBJECT) {
+			break;
+		}
+		int idx = JSONGetHashIndex(key);
+		if(idx < 0 || idx >= HASH_MAX) {
+			break;
+		}
+		if(!pObject->table[idx]) {
+			break;
+		}
+		// è¿›è¡Œé“¾å¼éå†
+		pJsonNode pNode = pObject->table[idx];
+		do{
+			if(strcmp(key, pNode->keyName) == 0) {
+				if (pNode->type != JSONTYPESTRING) {
+					break;
+				}
+				int len = strlen(((pJsonStringNode)pNode)->value) + 1;
+				*ppValue = (char*)malloc(len);
+				if (!*ppValue) {
+					break;
+				}
+				memset(*ppValue, 0, len);
+				memcpy(*ppValue, ((pJsonStringNode)pNode)->value, len - 1);
+				break;
+			}
+			pNode = pNode->next;
+		} while (pNode);
+	} while (0);
+}
+
 /*
-* »ñÈ¡ json Êı×éÊôĞÔ½ÚµãµÄÖµ
-* @param	pObject		pJsonObjectNode json ¶ÔÏó
-* @param	key			char*			¼ü
-* @param	ppValue		pJsonArrayNode*	Öµ
+* è·å– json æ•°ç»„å±æ€§èŠ‚ç‚¹çš„å€¼
+* @param	pObject		pJsonObjectNode json å¯¹è±¡
+* @param	key			char*			é”®
+* @param	ppValue		pJsonArrayNode*	å€¼
 * @return	void
 */
 void JSONObjectGetArrayAttr(pJsonObjectNode pObject /* in */, char* key /* in */, pJsonArrayNode* ppValue /* out */) {
@@ -4839,7 +5183,7 @@ void JSONObjectGetArrayAttr(pJsonObjectNode pObject /* in */, char* key /* in */
 			break;
 		}
 		if (pObject->table[idx]) {
-			// ½øĞĞÁ´Ê½±éÀú
+			// è¿›è¡Œé“¾å¼éå†
 			pJsonNode pNode = pObject->table[idx];
 			do {
 				if (strcmp(key, pNode->keyName) == 0) {
@@ -4856,10 +5200,10 @@ void JSONObjectGetArrayAttr(pJsonObjectNode pObject /* in */, char* key /* in */
 }
 
 /*
-* »ñÈ¡ json ¶ÔÏóÊôĞÔ½ÚµãµÄÖµ
-* @param	pObject		pJsonObjectNode json ¶ÔÏó
-* @param	key			char*				¼ü
-* @param	ppValue		pJsonObjectNode*	Öµ
+* è·å– json å¯¹è±¡å±æ€§èŠ‚ç‚¹çš„å€¼
+* @param	pObject		pJsonObjectNode json å¯¹è±¡
+* @param	key			char*				é”®
+* @param	ppValue		pJsonObjectNode*	å€¼
 * @return	void
 */
 void JSONObjectGetObjectAttr(pJsonObjectNode pObject /* in */, char* key /* in */, pJsonObjectNode* ppValue /* out */) {
@@ -4875,7 +5219,7 @@ void JSONObjectGetObjectAttr(pJsonObjectNode pObject /* in */, char* key /* in *
 			break;
 		}
 		if (pObject->table[idx]) {
-			// ½øĞĞÁ´Ê½±éÀú
+			// è¿›è¡Œé“¾å¼éå†
 			pJsonNode pNode = pObject->table[idx];
 			do {
 				if (strcmp(key, pNode->keyName) == 0) {
@@ -4892,9 +5236,9 @@ void JSONObjectGetObjectAttr(pJsonObjectNode pObject /* in */, char* key /* in *
 }
 
 /*
-* »ñÈ¡ json  null ÊôĞÔ½ÚµãµÄÖµ
-* @param	pObject		pJsonObjectNode json ¶ÔÏó
-* @param	key			char*				¼ü
+* è·å– json  null å±æ€§èŠ‚ç‚¹çš„å€¼
+* @param	pObject		pJsonObjectNode json å¯¹è±¡
+* @param	key			char*				é”®
 * @param	pValue		pJsonNullNode*
 * @return	void
 */
@@ -4911,7 +5255,7 @@ void JSONObjectGetNullAttr(pJsonObjectNode pObject /* in */, char* key /* in */,
 			break;
 		}
 		if (pObject->table[idx]) {
-			// ½øĞĞÁ´Ê½±éÀú
+			// è¿›è¡Œé“¾å¼éå†
 			pJsonNode pNode = pObject->table[idx];
 			do {
 				if (strcmp(key, pNode->keyName) == 0) {
@@ -4928,9 +5272,9 @@ void JSONObjectGetNullAttr(pJsonObjectNode pObject /* in */, char* key /* in */,
 }
 
 /*
-* »ñÈ¡ json  Boolean ÊôĞÔ½ÚµãµÄÖµ
-* @param	pObject		pJsonObjectNode json ¶ÔÏó
-* @param	key			char*				¼ü
+* è·å– json  Boolean å±æ€§èŠ‚ç‚¹çš„å€¼
+* @param	pObject		pJsonObjectNode json å¯¹è±¡
+* @param	key			char*				é”®
 * @param	pValue		BOOLEAN*
 * @return	void
 */
@@ -4947,7 +5291,7 @@ void JSONObjectGetBooleanAttr(pJsonObjectNode pObject /* in */, char* key /* in 
 			break;
 		}
 		if (pObject->table[idx]) {
-			// ½øĞĞÁ´Ê½±éÀú
+			// è¿›è¡Œé“¾å¼éå†
 			pJsonNode pNode = pObject->table[idx];
 			do {
 				if (strcmp(key, pNode->keyName) == 0) {
@@ -4964,8 +5308,9 @@ void JSONObjectGetBooleanAttr(pJsonObjectNode pObject /* in */, char* key /* in 
 }
 
 int tabCount = 0;
+
 /*
-* ´òÓ¡ Number
+* æ‰“å° Number
 * @param	pNumber pJsonNumberNode
 * @return	void
 */
@@ -4987,7 +5332,29 @@ void JSONPrintNumberNode(pJsonNumberNode pNode /* in */) {
 }
 
 /*
-* ´òÓ¡ String
+* æ‰“å° Number
+* @param	pNumber pJsonNumberNode
+* @return	void
+*/
+void JSONPrintLongNumberNode(pJsonLongNumberNode pNode /* in */) {
+	do {
+		if (!pNode) {
+			break;
+		}
+		if (pNode->node.type != JSONTYPELONGNUMBER) {
+			break;
+		}
+		if (pNode->node.keyName) {
+			printf("\"%s\": %llu,\n", pNode->node.keyName, pNode->value);
+		}
+		else {
+			printf("%llu,", pNode->value);
+		}
+	} while (0);
+}
+
+/*
+* æ‰“å° String
 * @param	pNode pJsonStringNode
 * @return	void
 */
@@ -5009,7 +5376,7 @@ void JSONPrintStringNode(pJsonStringNode pNode /* in */) {
 }
 
 /*
-* ´òÓ¡ Array
+* æ‰“å° Array
 * @param	pNode pJsonArrayNode
 * @return	void
 */
@@ -5035,6 +5402,9 @@ void JSONPrintArrayNode(pJsonArrayNode pNode /* in */) {
 		for (int i = 0; i < pNode->size; i++) {
 			if (pNode->array[i]->type == JSONTYPENUMBER) {
 				JSONPrintNumberNode((pJsonNumberNode)pNode->array[i]);
+			}
+			else if (pNode->array[i]->type == JSONTYPELONGNUMBER) {
+				JSONPrintLongNumberNode((pJsonLongNumberNode)pNode->array[i]);
 			}
 			else if (pNode->array[i]->type == JSONTYPESTRING) {
 				JSONPrintStringNode((pJsonStringNode)pNode->array[i]);
@@ -5069,8 +5439,8 @@ void JSONPrintArrayNode(pJsonArrayNode pNode /* in */) {
 }
 
 /*
-* ´òÓ¡ json ¶ÔÏó
-* @param	pObject		json ¶ÔÏó
+* æ‰“å° json å¯¹è±¡
+* @param	pObject		json å¯¹è±¡
 * @return	void
 */
 void JSONPrintObjectNode(pJsonObjectNode pObject /* in */) {
@@ -5103,6 +5473,9 @@ void JSONPrintObjectNode(pJsonObjectNode pObject /* in */) {
 					}
 					if (pNode->type == JSONTYPENUMBER) {
 						JSONPrintNumberNode((pJsonNumberNode)pNode);
+					}
+					else if (pNode->type == JSONTYPELONGNUMBER) {
+						JSONPrintLongNumberNode((pJsonLongNumberNode)pNode);
 					}
 					else if (pNode->type == JSONTYPESTRING) {
 						JSONPrintStringNode((pJsonStringNode)pNode);
@@ -5143,7 +5516,7 @@ void JSONPrintObjectNode(pJsonObjectNode pObject /* in */) {
 
 
 /*
-* ´òÓ¡ null
+* æ‰“å° null
 * @param	pNode pJsonNullNode
 * @return	void
 */
@@ -5165,7 +5538,7 @@ void JSONPrintNullNode(pJsonNullNode pNode /* in */) {
 }
 
 /*
-* ´òÓ¡ Boolean
+* æ‰“å° Boolean
 * @param	pNode pJsonBooleanNode
 * @return	void
 */
@@ -5199,8 +5572,8 @@ void JSONPrintBooleanNode(pJsonBooleanNode pNode /* in */) {
 }
 
 /*
-* ´òÓ¡ json ½Úµã
-* @param	pNode pJsonNode		json ½Úµã
+* æ‰“å° json èŠ‚ç‚¹
+* @param	pNode pJsonNode		json èŠ‚ç‚¹
 * @return	void
 */
 void JSONPrint(pJsonNode pNode /* in */) {
@@ -5213,6 +5586,9 @@ void JSONPrint(pJsonNode pNode /* in */) {
 		}
 		if (pNode->type == JSONTYPENUMBER) {
 			JSONPrintNumberNode((pJsonNumberNode)pNode);
+		}
+		else if (pNode->type == JSONTYPELONGNUMBER) {
+			JSONPrintLongNumberNode((pJsonLongNumberNode)pNode);
 		}
 		else if (pNode->type == JSONTYPESTRING) {
 			JSONPrintStringNode((pJsonStringNode)pNode);

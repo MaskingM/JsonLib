@@ -1,19 +1,25 @@
 #ifndef __JSON_DATA_STRUCT
 #define __JSON_DATA_STRUCT
 
-#define HASH_MAX		128		// hash table ´óĞ¡
-#define ARRAY_MIN_SIZE	128		// Êı×é½Úµã×îĞ¡Öµ£¬Èç¹û×·¼ÓÔªËØµÄÊ±ºò³¬³ö·¶Î§£¬Ôò¼ÌĞø·ÖÅäÄÚ´æ
-#define TMP_BUF_SIZE	32		// ÁÙÊ±»º³åÇø´óĞ¡£¬ÓÃÓÚ´æ·ÅÁÙÊ±Êı¾İ£¬±ÜÃâÆµ·±¿ª±ÙĞ¡ÄÚ´æ
+#define HASH_MAX				64		// hash table å¤§å°
+#define ARRAY_MIN_SIZE			32		// æ•°ç»„èŠ‚ç‚¹æœ€å°å€¼ï¼Œå¦‚æœè¿½åŠ å…ƒç´ çš„æ—¶å€™è¶…å‡ºèŒƒå›´ï¼Œåˆ™ç»§ç»­åˆ†é…å†…å­˜
+#define TMP_BUF_SIZE			32		// ä¸´æ—¶ç¼“å†²åŒºå¤§å°ï¼Œç”¨äºå­˜æ”¾ä¸´æ—¶æ•°æ®ï¼Œé¿å…é¢‘ç¹å¼€è¾Ÿå°å†…å­˜
 
 #define BFALSE	0
 #define BTRUE	1
 typedef int BOOLEAN;
 #define null	NULL
 
-// JSON µÄ»ù±¾Êı¾İÀàĞÍ
+
+// å®šä¹‰æ— ç¬¦å·64ä½é•¿æ•´å‹
+typedef long long unsigned int UINT64;
+
+
+// JSON çš„åŸºæœ¬æ•°æ®ç±»å‹
 typedef enum  {
 	JSONTYPEUNDEFINED = 0,
 	JSONTYPENUMBER = 1,
+	JSONTYPELONGNUMBER = 2,
 	JSONTYPESTRING,
 	JSONTYPEARRAY,
 	JSONTYPEOBJECT,
@@ -21,50 +27,57 @@ typedef enum  {
 	JSONTYPENULL
 } JSON_DATA_TYPE;
 
-// JSON »ù±¾½Úµã£¬Èç¹û hash ³åÍ»£¬ÔòÍ¨¹ıÔòÍ¨¹ıÁ´±í·½Ê½×·¼ÓÊôĞÔ
+// JSON åŸºæœ¬èŠ‚ç‚¹ï¼Œå¦‚æœ hash å†²çªï¼Œåˆ™é€šè¿‡åˆ™é€šè¿‡é“¾è¡¨æ–¹å¼è¿½åŠ å±æ€§
 typedef struct __json_data_node{
-	JSON_DATA_TYPE type;			// JSON ½ÚµãµÄÊı¾İÀàĞÍ
+	JSON_DATA_TYPE type;			// JSON èŠ‚ç‚¹çš„æ•°æ®ç±»å‹
 	char* keyName;
 	struct __json_data_node* next;
 } JsonNode, *pJsonNode;
 
-// JSON Number Êı¾İ
+// JSON Number æ•°æ®
 typedef struct {
 	JsonNode node;
 	double value;
 } JsonNumberNode, *pJsonNumberNode;
 
-// JSON String Êı¾İ
+// JSON Long Number æ•°æ®
+typedef struct {
+	JsonNode node;
+	UINT64 value;
+} JsonLongNumberNode, *pJsonLongNumberNode;
+
+// JSON String æ•°æ®
 typedef struct {
 	JsonNode node;
 	char* value;
 } JsonStringNode, *pJsonStringNode;
 
-// JSON Arrary Êı¾İ 
+// JSON Arrary æ•°æ® 
 typedef struct {
 	JsonNode node;
-	// Êı×éÀàĞÍ£¬ĞèÒª´æ·ÅÊı×é´óĞ¡£¬Êı×éÖ¸Õë£¬ÒÔ¼°´æ·ÅµÄÊı¾İÀàĞÍ
+	// æ•°ç»„ç±»å‹ï¼Œéœ€è¦å­˜æ”¾æ•°ç»„å¤§å°ï¼Œæ•°ç»„æŒ‡é’ˆï¼Œä»¥åŠå­˜æ”¾çš„æ•°æ®ç±»å‹
 	int size;
 	JSON_DATA_TYPE type;
 	pJsonNode *array;
 } JsonArrayNode, *pJsonArrayNode;
 
-// JSON Object Êı¾İ 
+// JSON Object æ•°æ® 
 typedef struct {
 	JsonNode node;
 	pJsonNode table[HASH_MAX];
 } JsonObjectNode, *pJsonObjectNode;
 
-// JSON null Êı¾İ 
+// JSON null æ•°æ® 
 typedef struct {
 	JsonNode node;
 	int value;
 } JsonNullNode, *pJsonNullNode;
 
-// JSON Boolean Êı¾İ 
+// JSON Boolean æ•°æ® 
 typedef struct {
 	JsonNode node;
 	BOOLEAN value;
 } JsonBooleanNode, *pJsonBooleanNode;
 
 #endif
+
